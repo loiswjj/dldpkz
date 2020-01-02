@@ -1,0 +1,439 @@
+.icon_yh {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 10px;
+    border: 2px solid #ffffff;
+    float: left;;
+}
+
+.icon{
+    width: 25px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.icon1{
+    width: 25px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.icon-head {
+    width: 65px;
+    height: 65px;
+    border: 1px solid #ffffff;
+    margin: 20px;
+}
+
+#msg {
+    color: red;
+    font-size: 14px;
+    width: 300px;
+    height: 20px;
+    margin-bottom: 10px;
+}
+
+.Header {
+    width: 100%;
+    height: 70px;
+    background-color: #3a4151;
+    font-size: 14px;
+    text-align: center;
+}
+
+.title {
+    color: #01adff;
+    font-size: 24px;
+    float: left;
+    margin-top: 20px;
+}
+
+.split {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.leftnav {
+    width: 180px;
+    position: absolute;
+    margin-left: -180px;
+}
+
+.leftnav ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    line-height: 32px;
+    margin-top: 18px;
+}
+
+.leftnav a {
+    display: block;
+    text-align: left;
+    text-decoration: none;
+    padding-left: 25%;
+    padding-bottom: 5px;
+}
+
+.leftnav a:hover {
+    background-color: #00aeff;
+}
+
+a:hover{
+    cursor: pointer;
+}
+
+.main-content {
+    background-color: #eceff4;
+}
+
+.username {
+    color: white;
+    height: 20px;
+    margin-top: 16%;
+    float: left;
+}
+
+.navPadding {
+    padding: 6px;
+}
+
+.sjtj {
+    background-color: white;
+    width: 23%;
+    height: 120px;
+    float: left;
+    font-size: 15px;
+    margin-right: 2%;
+    color: grey;
+}
+
+.home_icon{
+    width: 120px;
+}
+
+.font{
+    font-size: 25px;
+    margin: 5px;
+    color: #333333;
+}
+
+.detail {
+    background-color: white;
+    width: 97.5%;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+#sousuo {
+    border: 0;
+    margin: auto
+}
+
+#sousuo td {
+    height: 40px;
+    color: #8d8d8d;
+    font-size: 14px;
+}
+
+.btn-secondary {
+    color: #130e0e;
+    background-color: #f7fbff;
+    border-color: #6c757d;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.btn-toolbar {
+    padding: 18px 0px 10px;
+}
+
+.btn-group {
+    /*margin-left: 100px;*/
+}
+
+.btn-primary {
+    width: 60%;
+    border-radius: 18px;
+    margin: 15px 0px 0px 0px;
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    background-color: #eceff4;
+}
+
+.input-group-text {
+    background-color: #fdfeff;
+    border: 0px #ced4da;
+}
+
+.login_input {
+    border: 0;
+    border-bottom: 1px solid grey;
+    background: none;
+    margin-bottom: 8%;
+    width: 80%;
+    margin-left: 10%;
+}
+
+.yyTab tr {
+    height: 35px;
+}
+
+.text{
+     border: 0;
+     width: 100%;
+ }
+
+.yyTab{
+    width: 100%;
+}
+
+.yyTab td input,select{
+    width: 260px;
+    height: 30px;
+}
+
+.TabButton{
+    background-color: red;
+    width: 120px;
+    float: left;
+    margin-left: 60px;
+    margin-right: 20px;
+}
+
+.datagrid-wrap {
+    width: 98%;
+    height: auto;
+    border: 0px;
+}
+
+.datagrid-view2 {
+    width: 98%;
+}
+
+.datagrid-header td {
+    color: white;
+    height: 40px;
+    font-weight: normal;
+    background-color: #3a4152
+}
+
+/*设置datagrid 的表格的头部的样式*/
+.datagrid-header .datagrid-cell {
+    background-color: #3a4152;
+    font-size: 16px;
+}
+
+table td {
+    color: grey;
+}
+
+.datagrid .panel-body {
+    overflow: auto;
+    border: 0px;
+    margin-left: 0px;
+}
+
+/*关于对话框的设置*/
+.dialogtable tr > :first-child {
+    text-align: right;
+}
+
+.dialogtable tr input {
+    width: 270px;
+}
+
+.dialogtable tr {
+    height: 38px;
+}
+
+.dialog-Button1 {
+    float: left;
+    border: 1px solid;
+    border-radius: 18px;
+    width: 112px;
+    margin-left: 114px;
+    background-color: red;
+    color: white;
+    height: 36px;
+    padding: 4px;
+}
+
+.dialogbtn-txt {
+    margin-left: 23px;
+    color: white;
+    font-size: 16px;
+}
+
+.dialogbtn-icon {
+    margin-left: 20px;
+}
+
+.dialog-Button2 {
+    float: left;
+    border: 1px solid;
+    border-radius: 18px;
+    width: 112px;
+    color: white;
+    height: 36px;
+    padding: 4px;
+
+    margin-left: 26px;
+    background-color: #48cbe0;
+}
+
+.xq_container {
+    margin-left: 30px;
+    margin-top: 22px;
+    background-color: #ffffff;
+    padding: 20px;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.xq_container div {
+    margin-bottom: 8px;
+}
+
+.xq_nav {
+    margin-left: 30px;
+    margin-top: 11px;
+    font-size: 14px;
+}
+
+.xq {
+    margin-top: 11px;
+    font-size: 14px;
+}
+
+.test {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding-left: 180px;
+    background-color: #232429;
+}
+
+.import {
+    color: red;
+}
+
+.format {
+    text-align: right;
+    padding-right: 30px;
+}
+
+.ajxq tr {
+    line-height: 38px;
+}
+
+.leftdiv {
+    width: 50%;
+    float: left;
+}
+
+.screen{
+    background-color: black;
+    background-size: cover;
+    margin-left: 30px;
+    margin-top: 20px;
+    width: 500px;
+    height: 300px;
+    color: red;
+    font-size: 18px;
+    padding: 20px;
+    overflow: auto;
+}
+
+.rightdiv {
+    float: left;
+    width: 50%;
+}
+
+.ggmodel {
+    margin-left: 30px;
+    background-color: #ffffff;
+    padding: 20px;
+    display: none;
+}
+
+.loading{
+    display: none;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+}
+
+.mask{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    display: none;
+    background-color: rgba(9,9,9,0.63);
+}
+
+.login_bg{
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.image{
+    float: left;
+    width: 20px;
+    margin: 5px;
+}
+
+.fylogo{
+    width: 200px;
+    margin-top: 60px;
+}
+
+.button{
+    width: 70px;
+    height: 30px;
+    color: white;
+    border-radius: 5px;
+    background-color: #01b0b3;
+}
+
+.toolalign{
+    margin-bottom: 20px;
+    /*width: fit-content;*/
+    text-align: center;
+}
+
+.childNav{
+    height: 34px;
+    font-size: 12px;
+}
+
+.small_screen{
+    height: 60px;
+    width: 80px;
+    float: left;
+    margin-right: 20px;
+}
+
+.model{
+    width: 200px;
+    height: 120px;
+    float: left;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.border_style{
+    border: 3px solid rgba(0, 174, 255, 0.75);
+}

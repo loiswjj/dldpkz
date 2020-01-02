@@ -1,0 +1,156 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <div style="height: 150px">
+        <div style="margin-left: 30px;margin-top: 10px;">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 14px;">数据统计</span>
+        </div>
+        <div class="clearfix" style="margin-left: 30px;margin-top: 10px">
+            <div class="sjtj">
+                <img class="home_icon" src="../static/image/home_icon1.png" />
+                <span>
+                    最新预约
+                    <span class="font" th:text="${zxyy}"></span>个
+                </span>
+            </div>
+            <div class="sjtj">
+               <img class="home_icon" src="../static/image/home_icon2.png" />
+                <span>
+                    历史预约
+                    <span class="font" th:text="${lsyy}"></span>个
+                </span>
+            </div>
+            <div class="sjtj">
+                <img class="home_icon" src="../static/image/home_icon3.png" />
+                <span>
+                    正在发布
+                    <span class="font" th:text="${zzfb}"></span>个
+                </span>
+            </div>
+            <div class="sjtj">
+                <img class="home_icon" src="../static/image/home_icon4.png" />
+                <span>
+                    结束发布
+                    <span class="font" th:text="${jsfb}"></span>个
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="leftdiv">
+        <div style="float:left;margin-top: 10px">
+            <div style="margin-left: 30px;margin-bottom: 10px;">
+                <span style="font-weight: bold;">|</span>
+                <span style="font-size: 14px;">今日预约</span>
+            </div>
+            <!--表格绘制-->
+            <div style="margin-left: 30px;">
+                <table id="jryy">
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="rightdiv">
+        <div style="margin-bottom: 10px;margin-left: 30px; margin-top: 10px;">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 14px;">今日公告</span>
+        </div>
+        <div style="margin-left: 30px;">
+            <table id="jrgg">
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        initTable();
+    })
+
+    function initTable() {
+        var pagewidth = document.documentElement.clientWidth - 260;
+        var tablewidth = pagewidth*0.5;
+        $('#jryy').datagrid({
+            idField: "jryyId",
+            width: tablewidth,
+            height: 'auto',
+            striped: true,
+            scrollbarSize: 0,
+            url: "jryy",
+            loadMsg: "数据正在加载.....",
+            pagination: true,
+            pageList: [5, 10, 15, 20, 50],
+            pageSize: 10,
+            columns: [
+                [
+                    {
+                        field: 'ajmc', title: '案件名称', width: tablewidth*0.3, align: "center",
+                        formatter: function (value, record, index) {
+                            if (value == 'null') {
+                                return '<span>[快速预约]无案件名称</span>';
+                            } else {
+                                var str = value.substr(0, 10)+'...';
+                                return '<span>' + str + '</span>'
+                            }
+                        }
+                    },
+                    {field: 'lfrxm', title: '被预约人', width: tablewidth*0.15, align: "center"},
+                    {
+                        field: 'lfsjStr', title: '来访时间', width: tablewidth*0.3, align: "center",
+                        formatter: function (value, record, index) {
+                            var str = value.substr(0, 10);
+                            return "<span>" + str + "</span>";
+                        }
+                    },
+                    {field: 'jfdd', title: '接访地点', width: tablewidth*0.2, align: "center"}
+                ]
+            ]
+        });
+
+        $('#jrgg').datagrid({
+            idField: "jrgg",
+            width: tablewidth,
+            height: 'auto',
+            striped: true,
+            scrollbarSize: 0,
+            url: "jrgg",
+            loadMsg: "数据正在加载.....",
+            pagination: true,
+            pageList: [5, 10, 15, 20, 50],
+            pageSize: 10,
+            columns: [
+                [
+                    {
+                        field: 'ajmc',
+                        title: '案件名称',
+                        width: tablewidth*0.35,
+                        align: "center",
+                        formatter: function (value, record, index) {
+                            var str = value.substr(0, 10)+'...';
+                            return "<span>" + str + "</span>";
+                        }
+                    },
+                    {
+                        field: 'fbsj', title: '发布时间', width: tablewidth*0.28, align: "center",
+                        formatter: function (value, record, index) {
+                            var str = value.substr(0, 10);
+                            return "<span>" + str + "</span>";
+                        }
+                    },
+                    {
+                        field: 'gglx', title: '类型', width: tablewidth*0.3, align: "center",
+                        formatter: function (value, record, index) {
+                            if(value.length>7){
+                                var s = value.substr(0, 7) + '...';
+                                return "<span data-toggle='tooltip'" +
+                                    " data-placement='bottom' " +
+                                    "title='\"" + value + "\"'>" + s + "</span>"
+                            }else {
+                                return "<span>"+value+"</span>"
+                            }
+                        }
+                    },
+                ]
+            ]
+        })
+    }
+</script>

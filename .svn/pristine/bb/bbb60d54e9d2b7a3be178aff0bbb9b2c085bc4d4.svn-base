@@ -1,0 +1,151 @@
+<div class="clearfix" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="leftdiv">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 15px;">公告内容</span>
+        </div>
+        <div class="xq_container">
+            <input type="hidden" name="bh"/>
+            <input hidden="hidden" name="ajmc" th:value="${ggmodel.ajmc}"/>
+            <input hidden="hidden" name="ajxh" th:value="${ggmodel.ajxh}"/>
+            <div>
+                <select name="yg">
+                    <option th:each="item:${ggmodel.yg}" th:value="${item}"
+                            th:text="${item}"></option>
+                </select>
+                <span>:本院受理</span>
+                <select name="bg">
+                    <option th:each="item:${ggmodel.bg}" th:value="${item}"
+                            th:text="${item}"></option>
+                </select>
+                <span>诉你（们）</span>
+                <input readonly="readonly" name="ah" th:value="${ggmodel.ah}"/>
+                <input readonly="readonly" name="ay" th:value="${ggmodel.ay}"/>
+                <span>一案。现依法向你（们）公告送达起诉状副本、应诉通知书、举证通知书、开庭传票</span>
+                <select>
+                    <option>、上网告知书</option>
+                    <option>、权利义务告知书</option>
+                    <option>、监督卡</option>
+                    <option>、简转普裁定书</option>
+                </select>
+                <span>。自公告之日起经过60日，即视为送达，提出答辩状和举证期间分别为公告满后30日内。定于举证期满后的第</span>
+                <input name="date" class="require" placeholder="日期"/><span>日</span>
+                <input name="hour" class="require" placeholder="小时"/><span>时</span>
+                <input name="min" class="require" placeholder="分钟"/><span>分（遇法定节假日顺延）在本院</span>
+                <span>开庭审理。预期将依法缺席裁判。</span>
+            </div>
+            <div id="footer">
+                <input name="fy" th:value="${fy}" disabled="disabled"/>
+                <input name="fbsj" id="fbsj" disabled="disabled"/>
+            </div>
+        </div>
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-left: 30%">
+            <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <button type="button" class="btn btn-secondary" onclick="readPic_sdqs()">
+                    <span class="icon-file-text"><span class="navPadding">预览 </span></span></button>
+                <button type="button" class="btn btn-secondary" id="release" onclick="release()" disabled="disabled">
+                    <span class="icon-bullhorn"><span class="navPadding">发布</span></span></button>
+                <button type="button" class="btn btn-secondary" onclick="exit_sdqs()">
+                    <span class="icon-off"><span class="navPadding">关闭</span></span></button>
+            </div>
+        </div>
+    </div>
+    <div class="rightdiv">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 15px;">大屏预览</span>
+        </div>
+        <div class="screen">
+            <div id="ggnr_title" style="text-align: center"></div>
+            <span id="ggnr"></span>
+            <div id="fy" style="text-align: right"></div>
+            <div id="fbrq" style="text-align: right;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var nowTime = new Date();
+        var month =nowTime.getMonth()+1;
+        var day = nowTime.getDate()
+        var str = nowTime.getFullYear() + "年" ;
+        var str1 = nowTime.getFullYear() + "-" ;
+        if(month<10){
+            str +="0"+month + "月" ;
+            str1+="0"+month + "-"
+        }else{
+            str +=month + "月" ;
+            str1+=month + "-"
+        }
+        if(day<10){
+            str +="0"+nowTime.getDate()+"日";
+            str1 += "0"+nowTime.getDate();
+        }else {
+            str +=nowTime.getDate()+"日";
+            str1 += nowTime.getDate();
+        }
+        var page = findPage();
+        page.find('#fbsj').text(str);
+        page.find('#fbsj').val(str1);
+        page.find('#fbsj').datebox({
+            panelWidth: 300,
+            panelHeight: 210,
+            editable: false
+        });
+    })
+
+    //发布
+    function release() {
+        var obj = findPage();
+        var ah = obj.find('input[name="ah"]').val();
+        var ggobj = obj.find('.xq_container');
+        if(isReady($('.xq_container'))){
+            var id = obj.find("input[name='bh']").val();
+            var ajmc = obj.find("input[name='ajmc']").val();
+            var ajxh = obj.find("input[name='ajxh']").val();
+            var nr = ggnr(ggobj);
+            var data = {
+                id: id,
+                ah: ah,
+                ajxh:parseInt(ajxh),
+                ajmc: ajmc,
+                gglx: 1,
+                fbsj: obj.find('#fbsj').val(),
+                ggnr: nr,
+                status: 1
+            };
+            $.ajax({
+                url: "/addgg",
+                method: 'post',
+                data: JSON.stringify(data),
+                success: function (data) {
+                    obj.find("input[name='bh']").val(data);
+                    $.messager.show({
+                        title: "提示信息",
+                        msg: "成功插入一条公告！"
+                    });
+                }
+            })
+        }
+    }
+
+    //预览
+    function readPic_sdqs() {
+        var obj = findPage();
+        var ggobj = obj.find('.xq_container');
+        obj.find('#release').removeAttr('disabled');
+        obj.find('#ggnr').html(ggnr(ggobj));
+        obj.find('#ggnr_title').text('送达起诉状副本及开庭传票公告');
+        obj.find('#fy').text($("input[name='fy']").val());
+        obj.find('#fbrq').text($("input[name='fbsj']").val());
+    }
+
+    //关闭
+    function exit_sdqs() {
+        var obj = findPage();
+        var ah = obj.find('input[name="ah"]').val();
+        var href =encodeURI('/ggmodel?ah=' + ah + "&gglx=" + 1);
+        PageRemove(href);
+    }
+</script>

@@ -1,0 +1,142 @@
+<div class="clearfix" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="leftdiv">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 15px;">公告内容</span>
+        </div>
+        <div class="xq_container">
+            <input type="hidden" name="bh"/>
+            <input hidden="hidden" name="ajmc" th:value="${ggmodel.ajmc}"/>
+            <input hidden="hidden" name="ajxh" th:value="${ggmodel.ajxh}"/>
+            <div>
+                <span>失信被执行人公告关于</span>
+                <select name="yg">
+                    <option th:each="item:${ggmodel.yg}" th:value="${item}"
+                            th:text="${item}"></option>
+                </select>
+                <span>与</span>
+                <select name="bg">
+                    <option th:each="item:${ggmodel.bg}" th:value="${item}"
+                            th:text="${item}"></option>
+                </select>
+                <input contenteditable="false" name="ah" th:value="${ggmodel.ah}"/>
+                <input contenteditable="false" name="ay" th:value="${ggmodel.ay}"/>
+                <span>一案。现根据申请人申请,于</span>
+                <input name="date"/><span>日</span>
+                <input name="hour"/><span>时</span>
+                <input name="min"/><span>分,将</span>
+                <input contenteditable="false" name="bgdb" th:value="${ggmodel.bgdb}"/>
+                <span>列入失信被执行人名单,特此公告。</span>
+            </div>
+            <div>
+                <input name="fy" th:value="${fy}" readonly="readonly"/>
+                <input name="fbsj" id="fbsj" readonly="readonly"/>
+            </div>
+        </div>
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-left: 30%">
+            <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <button type="button" class="btn btn-secondary" onclick="readPic_sxbzxr()">
+                    <span class="icon-file-text"><span class="navPadding">预览 </span></span></button>
+                <button type="button" class="btn btn-secondary" id="release" onclick="release4()" disabled="disabled">
+                    <span class="icon-bullhorn"><span class="navPadding">发布</span></span></button>
+                <button type="button" class="btn btn-secondary" onclick="exit_sxbzxr()">
+                    <span class="icon-off"><span class="navPadding">关闭</span></span></button>
+            </div>
+        </div>
+    </div>
+    <div class="rightdiv">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 15px;">大屏预览</span>
+        </div>
+        <div class="screen">
+            <div id="ggnr_title" style="text-align: center"></div>
+            <span id="ggnr"></span>
+            <div id="fy" style="text-align: right"></div>
+            <div id="fbrq" style="text-align: right;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var nowTime = new Date();
+        var month =nowTime.getMonth()+1;
+        var day = nowTime.getDate()
+        var str = nowTime.getFullYear() + "年" ;
+        var str1 = nowTime.getFullYear() + "-" ;
+        if(month<10){
+            str +="0"+month + "月" ;
+            str1+="0"+month + "-"
+        }else{
+            str +=month + "月" ;
+            str1+=month + "-"
+        }
+        if(day<10){
+            str +="0"+nowTime.getDate()+"日";
+            str1 += "0"+nowTime.getDate();
+        }else {
+            str +=nowTime.getDate()+"日";
+            str1 += nowTime.getDate();
+        }
+        $('#fbsj').text(str);
+        $('#fbsj').val(str1);
+        $('#fbsj').datebox({
+            panelWidth: 300,
+            panelHeight: 210,
+            editable: false
+        });
+    })
+
+    //发布
+    function release4() {
+        var obj = findPage();
+        var ggobj = obj.find('.xq_container');
+        var id = obj.find("input[name='bh']").val();
+        var ah = obj.find("input[name='ah']").val();
+        var ajmc = obj.find("input[name='ajmc']").val();
+        var ajxh = obj.find("input[name='ajxh']").val();
+        var nr = ggnr(ggobj);
+        var data = {
+            id: id,
+            ah: ah,
+            ajxh:parseInt(ajxh),
+            ajmc: ajmc,
+            gglx: 4,
+            fbsj: obj.find('#fbsj').val(),
+            ggnr: nr,
+            status: 1
+        };
+        $.ajax({
+            url: "/addgg",
+            method: 'post',
+            data: JSON.stringify(data),
+            success: function (data) {
+                obj.find("input[name='bh']").val(data);
+                $.messager.show({
+                    title: "提示信息",
+                    msg: "成功插入一条公告！"
+                });
+            }
+        })
+    }
+
+    //预览
+    function readPic_sxbzxr() {
+        var obj = findPage();
+        var ggobj = obj.find('.xq_container');
+        $('#release').removeAttr('disabled');
+        $('#ggnr').html(ggnr(ggobj));
+        $('#ggnr_title').text('失信被执行人公告');
+        $('#fy').text($("input[name='fy']").val());
+        $('#fbrq').text($("input[name='fbsj']").val());
+    }
+
+    //关闭
+    function exit_sxbzxr() {
+        var obj = findPage();
+        var ah = obj.find("input[name='ah']").val();
+        var href =encodeURI('/ggmodel?ah=' + ah + "&gglx=" + 4);
+        PageRemove(href);
+    }
+</script>

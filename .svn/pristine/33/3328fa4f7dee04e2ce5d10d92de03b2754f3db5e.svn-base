@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="multipart/form-data" charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../static/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../static/css/base.css"/>
+</head>
+<body>
+<img id="bg" src="../static/image/login_bg.png"/>
+<div class="login_bg" style="width: 400px;height:300px;">
+    <div id="msg" th:text="${msg}"></div>
+    <img class="image" src="../static/image/user.png">
+    <input type="text" id="username" class="form-control login_input" aria-describedby="basic-addon3"
+           placeholder="请输入用户名">
+    <img class="image" src="../static/image/pwd.png">
+    <input type="password" id="pwd" class="form-control login_input" aria-describedby="basic-addon3"
+           placeholder="请输入密码">
+    <img style="width: 60%;margin-left: 19%;" id="submit" src="../static/image/submit.png">
+</div>
+</body>
+</html>
+
+<script type="text/javascript" src="../static/js/jquery-1.9.1.min.js"></script>
+<!--[if lt IE 9]>
+<script src="../static/js/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="../static/js/respond.js"></script>
+<![endif]-->
+<script src="../static/js/bootstrap.js"></script>
+<script>
+    if (window.innerHeight != null) {
+        $("#bg").css("height", window.innerHeight);
+        $("#bg").css("width", "100%");
+    } else {
+        $("#bg").css("height", document.documentElement.clientHeight);
+        $("#bg").css("width", "100%");
+    }
+    $("#username").focus();
+
+    /**
+     * 点击按钮与按Enter键均可触发登录事件
+     */
+    $('body').keydown(function () {
+        if (event.keyCode == 13) {
+            $("#submit").click();
+        }
+    })
+
+    $("#submit").click(function () {
+        var username = $("#username").val();
+        var pwd = $("#pwd").val();
+        if (username == '') {
+            $("#msg").html("请输入用户名");
+        } else if (pwd == '') {
+            $("#msg").html("请输入密码");
+        } else {
+            $.ajax({
+                url: '/login',
+                data: {
+                    fydm: '960200 230',
+                    username: $("#username").val(),
+                    password: $("#pwd").val()
+                },
+                method: 'post',
+                success: function (res) {
+                    if (res == 'success') {
+                        window.location.href = '/index?user= &fydm= '
+                    } else {
+                        $("#msg").html(res)
+                    }
+                }
+            })
+        }
+    })
+</script>

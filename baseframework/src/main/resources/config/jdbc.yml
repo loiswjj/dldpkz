@@ -1,0 +1,39 @@
+jdbc.initialSize: 5
+jdbc.maxIdle: 20
+jdbc.minIdle: 5
+jdbc.maxActive: 30
+
+#测试库
+jdbc.url.test: jdbc:sybase:Tds:130.39.105.210:5000/JUDGE?charset=cp936
+jdbc.driverclassname.test: com.sybase.jdbc4.jdbc.SybDataSource
+jdbc.username.test: fymis
+jdbc.password.test: nju36WCCCGCGCGCGCG
+
+#东丽法院
+jdbc.url.tjdlfy: jdbc\:sybase\:Tds\:130.13.0.1\:5000/JUDGE?charset\=cp936
+jdbc.username.tjdlfy: fymis
+jdbc.password.tjdlfy: nju36WW888BGWB8BB8
+
+#信访库
+jdbc.url.xf: jdbc:sybase:Tds:130.1.1.27:5000/XF?charset=cp936
+jdbc.driverclassname.xf: com.sybase.jdbc4.jdbc.SybDataSource
+jdbc.username.xf: sa
+jdbc.password.xf: xieche
+
+# mysql数据库配置
+# 测试公告库
+jdbc.url.local: jdbc:mysql://localhost:3306/dlfy?serverTimezone=GMT&&characterEncoding=utf8&useSSL=false
+jdbc.driverclassname.local: com.mysql.jdbc.Driver
+jdbc.username.local: root
+jdbc.password.local: 123456
+
+# 东丽公告库
+jdbc.url.dlgg: jdbc:mysql://localhost/dlfy?serverTimezone=GMT&&characterEncoding=utf8&useSSL=false
+jdbc.driverclassname.dlgg: com.mysql.jdbc.Driver
+jdbc.username.dlgg: root
+jdbc.password.dlgg: 123456
+
+jdbc.validation-query: SELECT 1
+jdbc.test-on-borrow: true
+jdbc.test-while-idle: true
+jdbc.time-between-eviction-runs-millis: 18800

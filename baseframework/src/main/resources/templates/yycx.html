@@ -1,0 +1,294 @@
+<div class="detail" xmlns:th="http://www.w3.org/1999/xhtml">
+    <form id="mysearch">
+        <div class="clearfix">
+            <div class="row" style="margin: 5px;">
+                <div class="col-sm-3 form-inline">
+                    <span class="input-group-text">案号:</span>
+                    <input type="text" name="ah" class="form-control" aria-describedby="basic-addon3"
+                           placeholder="请输入案号">
+                </div>
+                <div class="col-sm-6 form-inline">
+                    <label class="input-group-text">案件名称:</label>
+                    <input type="text" name="ajmc" placeholder="请输入案件名称" class="form-control"
+                           aria-describedby="basic-addon3" style="width: 425px;">
+                </div>
+                <div class="col-sm-3 form-inline">
+                    <label class="input-group-text">被预约人：</label>
+                    <input type="text" name="byyr" class="form-control" aria-describedby="basic-addon3"
+                           placeholder="请输入被预约人" style="width: 150px;">
+                </div>
+            </div>
+            <div class="row" style="margin: 5px;">
+                <div class="col-sm-3 form-inline">
+                    <label class="input-group-text">接访地点：</label>
+                    <input type="text" name="jfdd" class="form-control" aria-describedby="basic-addon3"
+                           placeholder="接访地点" style="width: 158px;">
+                </div>
+                <div class="col-sm-3 form-inline">
+                    <label class="input-group-text">联系方式：</label>
+                    <input type="text" name="lxfs" class="form-control" aria-describedby="basic-addon3"
+                           placeholder="联系方式" style="width: 150px">
+                </div>
+                <div class="col-sm-3 form-inline">
+                    <label class="input-group-text">来访时间：</label>
+                    <input type="text" name="lfsj" class="form-control" aria-describedby="basic-addon3"
+                           style="width: 150px;height: 30px;">
+                </div>
+                <div class="col-sm-3 form-inline">
+                    <label class="input-group-text">预约状态：</label>
+                    <select name="yyzt" class="form-control" aria-describedby="basic-addon3" style="width: 150px;">
+                        <option value="">请选择预约状态</option>
+                        <option th:each="item:${yyzt}" th:value="${item.dmbh}" th:text="${item.dmms}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin: 5px;">
+                <div class="col-sm-5"></div>
+                <div class="col-sm-3">
+                    <button type="button" class="btn btn-primary">
+                                <span class="icon-search"><span class="navPadding"
+                                                                id="searchbtn">搜索</span></span></button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<div class="toolalign" role="toolbar" aria-label="Toolbar with button groups">
+    <span>
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+        <button type="button" class="btn btn-secondary" id="moreInfo1">
+            <span class="icon-file-alt"><span class="navPadding">查看详情</span></span>
+        </button>
+        <button type="button" class="btn btn-secondary" id="quickReserve1">
+            <span class="icon-pencil"><span class="navPadding">快速预约</span></span></button>
+    </div>
+    <div class="btn-group mr-2" role="group" aria-label="Second group">
+        <button type="button" class="btn btn-secondary" id="updateTable1">
+            <span class="icon-refresh"><span class="navPadding">刷新</span></span></button>
+        <button type="button" class="btn btn-secondary" id="printTable1">
+            <span class="icon-print"><span class="navPadding">打印</span></span></button>
+        <button type="button" class="btn btn-secondary" id="exportTable1">
+            <span class="icon-share"><span class="navPadding">导出</span></span></button>
+    </div>
+    </span>
+</div>
+
+<!--表格绘制-->
+<div class="clearfix" style="margin-left: 10px;">
+    <table id="t_yycx" class="easyui-datagrid"></table>
+</div>
+
+<form id="yyDialog1"  xmlns:th="http://www.w3.org/1999/xhtml">
+    <input type="hidden" name="id" value=""/>
+    <table class="yyTab">
+        <tr>
+            <td class="format"><span class="import">*</span>来访人姓名:</td>
+            <td><input type="text" name="lfr" class="require" placeholder="来访人姓名"/></td>
+        </tr>
+        <tr>
+            <td class="format"><span class="import">*</span>身份证号：</td>
+            <td><input type="text" name="sfzh" class="require" placeholder="身份证号"/></td>
+        </tr>
+        <tr>
+            <td class="format">联系方式:</td>
+            <td><input type="text" name="lfrlxfs" placeholder="联系方式"
+                       style="height: 30px;width: 260px;"/></td>
+        </tr>
+        <tr>
+            <td class="format">来访时间:</td>
+            <td><input type="text" name="lfsj"/></td>
+        </tr>
+        <tr>
+            <td class="format">备注:</td>
+            <td><input type="text" name="bz" placeholder="备注"/></td>
+        </tr>
+        <tr>
+            <td class="format">接访地点:</td>
+            <td><input type="text" name="jfdd" placeholder="接访地点"/></td>
+        </tr>
+
+        <tr>
+            <td class="format">接访部门:</td>
+            <td><input type="text" name="jfbm" value=""/></td>
+        </tr>
+        <tr>
+            <td class="format">接访人:</td>
+            <td><input type="text" name="jfr" th:value="${jfr}"/></td>
+        </tr>
+
+        <tr>
+            <td class="format">联系方式:</td>
+            <td><input type="text" name="jfrlxfs" value=""/></td>
+        </tr>
+    </table>
+    <button type="reset" id="btn1" class="btn btn-primary TabButton">
+        <span class="icon-remove">
+            <span class="navPadding">重置</span>
+        </span>
+    </button>
+    <button type="button" id="btn2" class="btn btn-primary" style="width: 120px;">
+        <span class="icon-ok">
+            <span class="navPadding">确认</span>
+        </span>
+    </button>
+</form>
+<img src="../static/image/login.jpg" style="display: none;"/>
+
+<style>
+    .combo {
+        border-color: #cccccc;
+        height: 30px;
+        border-radius: 4px;
+    }
+</style>
+
+<script>
+    $(function () {
+        findPage().find("input[name='lfsj']").datebox({
+            panelWidth: 300,
+            panelHeight: 210,
+            editable: true
+        });
+
+        //初始化表格
+        initTable();
+
+        $('#yyDialog1').dialog({
+            modal: true,
+            draggable: false,
+            closed: true,
+            width: 500,
+            position: "center",
+            title: "快速预约"
+        });
+
+        /*搜索按钮*/
+        findPage().find('#searchbtn').click(function () {
+            $('#t_yycx').datagrid('load', serializeForm(findPage().find('#mysearch')))
+        });
+
+
+        /*刷新按钮*/
+        findPage().find('#updateTable1').click(function () {
+            $('#t_yycx').datagrid('reload');
+            $('#t_yycx').datagrid('unselectedAll');
+        });
+
+        /*查看详情*/
+        findPage().find('#moreInfo1').click(function () {
+            var arr = $('#t_yycx').datagrid('getSelections');
+            if (arr.length != 1) {
+                $.messager.show({
+                    title: "提示信息",
+                    msg: "请选择需要查看的一条数据！"
+                });
+            }else {
+                var bh = arr[0].bh;
+                addElement($('#curNav'), '/yyxq?bh=' + bh, '', '预约详情');
+                $('#t_yycx').datagrid('unselectAll');
+            }
+        });
+
+        /*快速预约*/
+        findPage().find('#quickReserve1').click(function () {
+            $('#yyDialog1').dialog("open");
+        });
+
+        /*打印表格*/
+        findPage().find('#printTable1').click(function () {
+
+        });
+        /*导出表格*/
+        findPage().find('#exportTable1').click(function () {
+            var title = getColumnField($('#t_yycx'));
+            var content = getSelectedRows($('#t_yycx'));
+            var lx = 'yyb';
+            window.location.href = "/export?titles=" + title + "&lx=" +
+                lx + "&content=" + content;
+        });
+
+        /*将快速预约表的内容保存 */
+        $('#btn2').click(function () {
+            var data = serializeForm($('#yyDialog1'))
+            if(isReady($('#yyDialog1'))){
+                $.ajax({
+                    url: '/addYy',
+                    method: 'post',
+                    dataType: 'json',
+                    data: JSON.stringify(data),
+                    success: function () {
+                        $('#yyDialog1').dialog("close");
+                        $.messager.show({
+                            title: "提示信息",
+                            msg: "成功添加一条预约记录！"
+                        });
+                        $('#t_yycx').datagrid('reload');
+                        $('#t_yycx').datagrid('unselectAll');
+                        $('#jryy').datagrid('reload');
+                    }
+                })
+            }
+        });
+    });
+
+    function initTable() {
+        var tablewidth = document.documentElement.clientWidth - 210;
+        $('#t_yycx').datagrid({
+            idField: "bh",
+            width: tablewidth,
+            nowrap: false,
+            height: 'auto',
+            striped: true,
+            scrollbarSize: 0,
+            rownumbers: true,
+            url: "yyTable",
+            loadMsg: "数据正在加载.....",
+            pagination: true,
+            pageList: [5, 10, 15, 20, 50],
+            pageSize: 10,
+            columns: [
+                [
+                    {field: 'ck', title: '全选', width: 10, checkbox: true},
+                    {
+                        field: 'status', title: '预约状态', align: "center", width: tablewidth * 0.1,
+                        formatter: function (value, record, index) {
+                            return "<button class='button' " +
+                                "style=\"" + yyztcolor(value) + "\">" + value + "</button>"
+                        }
+                    },
+                    {field: 'lfsjStr', title: '来访时间', align: "center", width: tablewidth * 0.1},
+                    {field: 'jfdd', title: '接访地点', align: "center", width: tablewidth * 0.1},
+                    {field: 'lfrxm', title: '被预约人', align: "center", width: tablewidth * 0.1},
+                    {field: 'lfsy', title: '来访事由', align: "center", width: tablewidth * 0.1},
+                    {field: 'lfrlxfs', title: '来访人联系方式', align: "center", width: tablewidth * 0.1},
+                    {
+                        field: 'ajmc', title: '案件名称', align: "center", width: tablewidth * 0.15,
+                        formatter: function (value, record, index) {
+                            if (value != null && value.length > 10) {
+                                str = value.substr(0, 10) + '...';
+                                return "<span data-toggle='tooltip'" +
+                                    " data-placement='bottom' " +
+                                    "title='\"" + value + "\"'>" + str + "</span>"
+                            } else {
+                                return "<span>" + value + "</span>"
+                            }
+                        }
+                    },
+                    {field: 'bz', title: '备注', align: "center", width: tablewidth * 0.05},
+                    {
+                        field: 'bh',
+                        title: '操作',
+                        align: "center", width: tablewidth * 0.1,
+                        formatter: function (value, record, index) {
+                            var lx = 1;
+                            return "<button class='button' onclick='moreInfo(\"" + value + "," + lx + "\")'>查看</button>"
+
+                        }
+                    }
+                ]
+            ]
+        });
+    }
+</script>

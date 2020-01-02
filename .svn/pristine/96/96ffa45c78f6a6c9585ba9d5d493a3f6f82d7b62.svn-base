@@ -1,0 +1,96 @@
+package nju.software.baseframework.data.dataobject;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * 侧边栏
+ */
+@Entity
+@Table(name = "nav")
+public class Nav {
+    private Integer id;
+    private String name;
+    private String href;
+    private String iconUrl;
+    private Integer level;
+    private String iconNav;
+    private String dqfy;
+    private Integer fdh; //父级标签id 0-无父级标签
+
+    @Id
+    @Column(name = "id")
+    public Integer getId() {
+        return id;
+    }
+
+    @Column(name="href")
+    public String getHref() {
+        if(href!=null && href.equals("")) href=null;
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+    @Column(name = "iconurl")
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
+    }
+
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Column(name = "level")
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    @Column(name = "iconNav")
+    public String getIconNav() {
+        return "<span class=\""+this.iconNav+"\"><span class=\"navPadding\">"+this.name+"</span></span>";
+    }
+
+    public void setIconNav(String iconNav) {
+
+        this.iconNav = iconNav;
+    }
+    @Column(name = "dqfy")
+    public String getDqfy() {
+        return dqfy;
+    }
+
+    public void setDqfy(String dqfy) {
+        this.dqfy = dqfy;
+    }
+
+    @Column(name = "fdh")
+    public Integer getFdh() {
+        return fdh;
+    }
+
+    public void setFdh(Integer fdh) {
+        this.fdh = fdh;
+    }
+}

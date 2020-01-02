@@ -1,0 +1,204 @@
+<div class="clearfix" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="detail">
+        <form id="mysearch">
+            <div class="clearfix">
+                <div class="row" style="margin: 5px;">
+                    <div class="col-sm-6 form-inline">
+                        <label class="input-group-text">案号:</label>
+                        <input type="text" name="ah" class="form-control" aria-describedby="basic-addon3"
+                               placeholder="请输入案号" style="width: 440px;">
+                    </div>
+                    <div class="col-sm-6 form-inline">
+                        <span class="input-group-text">案件名称:</span>
+                        <input type="text" name="ajmc" placeholder="请输入案件名称" class="form-control"
+                               aria-describedby="basic-addon3" style="width: 390px;">
+                    </div>
+                </div>
+                <div class="row" style="margin: 5px;">
+                    <div class="col-sm-3 form-inline">
+                        <label class="input-group-text">发布时间：</label>
+                        <input type="text" name="fbsj" class="form-control" aria-describedby="basic-addon3"
+                               placeholder="发布时间" style="width: 150px;height: 30px">
+                    </div>
+                    <div class="col-sm-3 form-inline">
+                        <span class="input-group-text">公告类型：</span>
+                        <select name="gglx" class="form-control" aria-describedby="basic-addon3" style="width: 150px;">
+                            <option value="">请选择公告类型</option>
+                            <option th:each="item:${gglx}" th:text="${item.dmms}" th:value="${item.dmbh}"></option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 form-inline">
+                        <label class="input-group-text">公告状态：</label>
+                        <select name="ggzt" class="form-control" aria-describedby="basic-addon3" style="width: 150px;">
+                            <option value="">请选择公告状态</option>
+                            <option th:each="item:${ggzt}" th:text="${item.dmms}" th:value="${item.dmbh}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5"></div>
+                    <div class="col-sm-3">
+                        <button type="button" class="btn btn-primary" id="searchBtn">
+                            <span class="icon-search"><span class="navPadding">搜索</span></span></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="toolalign" role="toolbar" aria-label="Toolbar with button groups">
+        <span>
+            <div class="btn-group mr-2" role="group" aria-label="Second group">
+            <button type="button" class="btn btn-secondary">
+                <span class="icon-refresh"><span class="navPadding" id="updateTable2">刷新</span></span></button>
+            <button type="button" class="btn btn-secondary">
+                <span class="icon-print"><span class="navPadding" id="printTable2">打印</span></span></button>
+            <button type="button" class="btn btn-secondary">
+                <span class="icon-share"><span class="navPadding" id="exportTable2">导出</span></span></button>
+        </div>
+        </span>
+    </div>
+    <div style="margin-left: 10px">
+        <table id="t_ggcx"></table>
+    </div>
+</div>
+
+<style>
+    .combo {
+        border-color: #cccccc;
+        height: 30px;
+        border-radius: 4px;
+    }
+</style>
+
+<script>
+    $(function () {
+        //初始化表格
+        initTable();
+
+        findPage().find('input[name="fbsj"]').datebox({
+            panelWidth: 300,
+            panelHeight: 210,
+            editable: false
+        });
+
+        /*搜索按钮*/
+        $('#searchBtn').click(function () {
+            //console.log(serializeForm($('#mysearch')))
+            findPage().find('#t_ggcx').datagrid('load', serializeForm(findPage().find('#mysearch')))
+        });
+
+
+        /*刷新按钮*/
+        findPage().find('#updateTable2').click(function () {
+            findPage().find('#t_ggcx').datagrid('reload');
+        });
+
+        /*查看详情*/
+        findPage().find('#moreInfo2').click(function () {
+            var arr = $('#t_yycx').datagrid('getSelections');
+            if (arr.length != 1) {
+                $.messager.show({
+                    title: "提示信息",
+                    msg: "请选择需要查看的一条数据！"
+                });
+            }else {
+                addElement($('#curNav'), '/ggxq?bh=' + arr[0].bh, '', '公告详情');
+            }
+        });
+
+        /*打印表格*/
+        findPage().find('#printTable2').click(function () {
+
+        });
+        /*导出表格*/
+        findPage().find('#exportTable2').click(function () {
+            var title = getColumnField($('#t_ggcx'));
+            var content = getSelectedRows($('#t_ggcx'));
+            var lx = 'ggb';
+            window.location.href = "/export?titles=" + title + "&lx=" +
+                lx + "&content=" + content;
+        });
+    });
+
+    function initTable() {
+        var tablewidth = document.documentElement.clientWidth - 210;
+        $('#t_ggcx').datagrid({
+            idField: "id",
+            width: tablewidth,
+            nowrap: false,
+            height: 'auto',
+            striped: true,
+            scrollbarSize: 0,
+            rownumbers: true,
+            url: "ggTable",
+            loadMsg: "数据正在加载.....",
+            pagination: true,
+            pageList: [5, 10, 15, 20, 50],
+            pageSize: 10,
+            columns: [
+                [
+                    {field: 'ck', title: '全选', checkbox: true},
+                    {
+                        field: 'ggzt', title: '状态', align: "center", width: tablewidth * 0.08,
+                        formatter: function (value, record, index) {
+                            return '<button class="btn btn-info" ' +
+                                'style="' + ggcolor(value) + '">' + value + '</button>'
+                        }
+                    },
+                    {field: 'gglx', title: '公告类型', align: "center", width: tablewidth * 0.1},
+                    {field: 'shsm', title: '审核说明', align: "center", width: tablewidth * 0.05},
+                    {field: 'fbsj', title: '发布时间', align: "center", width: tablewidth * 0.08},
+                    {field: 'ggsc', title: '公告时长', align: "center", width: tablewidth * 0.05},
+                    {field: 'ggsysc', title: '剩余时长', align: "center", width: tablewidth * 0.05},
+                    {field: 'dqsj', title: '到期时间', align: "center", width: tablewidth * 0.08},
+                    {
+                        field: 'ah', title: '案号', align: "center", width: tablewidth * 0.12,
+                        formatter: function (value, record, index) {
+                            if (value.length > 10) {
+                                str = value.substr(0, 10) + '...';
+                                return "<span data-toggle='tooltip'" +
+                                    " data-placement='bottom' " +
+                                    "title='\"" + value + "\"'>" + str + "</span>"
+                            } else {
+                                return "<span>" + value + "</span>"
+                            }
+                        }
+                    },
+                    {
+                        field: 'ajmc', title: '案件名称', align: "center", width: tablewidth * 0.12,
+                        formatter: function (value, record, index) {
+                            if (value.length > 10) {
+                                str = value.substr(0, 10) + '...';
+                                return "<span data-toggle='tooltip'" +
+                                    " data-placement='bottom' " +
+                                    "title='\"" + value + "\"'>" + str + "</span>"
+                            } else {
+                                return "<span>" + value + "</span>"
+                            }
+                        }
+                    },
+                    {field: 'fbr', title: '发布人', align: 'center', width: tablewidth * 0.05},
+                    {
+                        field: 'id', title: '操作', align: "center", width: tablewidth * 0.12,
+                        formatter: function (value, record, index) {
+                            var lx = 2;
+                            return "<button class='button' onclick='moreInfo(\"" + value + "," + lx + "\")'>查看</button>"
+                            // if (record.ggzt == '审核成功') {
+                            //     return "<button class='button' onclick='download(\"" + value + "\")'>下载</button>"
+                            // } else if (record.ggzt == '审核中') {
+                            //     return "<div><button style='float: left;' class='button' " +
+                            //         "onclick='download(\"" + value + "\")'>下载</button>" +
+                            //         "<button style='float: left;' class='btn btn-info'" +
+                            //         " onclick='release(\"" + value + "\")'>发布</button>" +
+                            //         "</div>"
+                            // } else {
+                            //
+                            // }
+                        }
+                    },
+                ]
+            ]
+        });
+    }
+</script>

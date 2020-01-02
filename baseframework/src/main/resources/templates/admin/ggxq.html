@@ -1,0 +1,96 @@
+<div class="clearfix" xmlns:th="http://www.w3.org/1999/xhtml">
+    <input hidden="hidden" name="lx" th:value="${lx}"/>
+    <div class="leftdiv">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 14px;">当前公告</span>
+        </div>
+        <div th:if="${ggb}!=null" class="xq_container">
+            <input name="id" hidden="hidden" th:value="${ggb.id}">
+            <input name="gglx" hidden="hidden" th:value="${ggb.gglx0}"/>
+            <div style="line-height: 38px;">
+                <span>当前公告状态：<span th:text="${ggb.ggzt}"></span></span>
+            </div>
+            <div style="line-height: 38px;">
+                <span>公告类型：<span th:text="${ggb.gglx}"></span></span>
+            </div>
+            <div style="line-height: 38px;">
+                <span>公告发布时间：<span th:text="${ggb.fbsj}"></span></span>
+            </div>
+            <div style="line-height: 38px;">
+                <span>公告剩余时间：<span th:text="${ggb.ggsysj}"></span></span>
+            </div>
+        </div>
+
+        <div th:if="${ggb}!=null" class="screen">
+            <div id="ggnr_title" style="text-align: center" th:value="${ggb.gglx}"></div>
+            <span id="ggnr" th:value="${ggb.ggnr}"></span>
+            <div id="fy" style="text-align: right" th:value="${fy}"></div>
+            <div id="fbrq" style="text-align: right;" th:value="${ggb.fbsj}"></div>
+        </div>
+
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-left: 30%">
+            <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <button type="button" class="btn btn-secondary" onclick="ggsh(5)">
+                    <span class="icon-check"><span class="navPadding">审核通过</span></span></button>
+                <button type="button" class="btn btn-secondary" onclick="ggsh(7)">
+                    <span class="icon-refresh"><span class="navPadding">审核不通过</span></span></button>
+                <button type="button" class="btn btn-secondary" onclick="exit()">
+                    <span class="icon-off"><span class="navPadding">退出</span></span></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="rightdiv">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 14px;">案件详情</span>
+        </div>
+        <div class="xq_container">
+            <div>
+                <div><span>案号：        </span><span id="ah" th:text="${ajxq.ah}"></span></div>
+            </div>
+            <div>
+                <div><span>案件名称：    </span><span th:text="${ajxq.ajmc}"></span></div>
+            </div>
+            <div>
+                <div><span>适用程序：    </span><span th:text="${ajxq.sycx}"></span></div>
+            </div>
+            <div>
+                <div><span>立案日期：    </span><span th:text="${ajxq.larq}"></span></div>
+            </div>
+            <div>
+                <div><span>剩余审理天数：</span><span th:text="${ajxq.syslts}"></span></div>
+            </div>
+            <div>
+                <div><span>审判长：      </span><span th:text="${ajxq.spz}"></span></div>
+            </div>
+            <div>
+                <div><span>审判员：      </span><span th:text="${ajxq.spy}"></span></div>
+            </div>
+            <div>
+                <div><span>法官助理：    </span><span th:text="${ajxq.fgzl}"></span></div>
+            </div>
+            <div>
+                <div><span>当事人：      </span><span th:text="${ajxq.dsr}"></span></div>
+            </div>
+            <div>
+                <div><span>关联联系人：  </span><span th:text="${ajxq.gllxr}"></span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ggsh(ggzt) {
+        var obj = findPage();
+        var id = obj.find("input[name='id']").val();
+        gg_sh(id,parseInt(ggzt));
+    }
+
+    function exit() {
+        var obj = findPage();
+        var id = obj.find("input[name='id']").val();
+        PageRemove('/sh_gg?bh='+id);
+    }
+</script>

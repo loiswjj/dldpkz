@@ -1,0 +1,56 @@
+<div id="show"></div>
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <div id="nrlb" style="display: none;" th:text="${nrlb}"></div>
+</div>
+<script src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../static/js/my/common.js"></script>
+<script>
+    $(function () {
+        var lb = $('#nrlb').text();
+        var arr = [];
+        $.ajax({
+            url:'showggList?arr='+arr+"&lb="+lb,
+            success:function (html) {
+                $("#show").html(html)
+                $.ajax({
+                    url:'UpdateScreenStatus',
+                    method:'post',
+                    data:{
+                        lx:0,
+                        status:0
+                    }
+                })
+            }
+        });
+        setInterval(fresh,10000);
+    });
+
+    function fresh() {
+        $.ajax({
+            url:'getScreenStatus?lx=0',
+            method:'post',
+            success:function (res) {
+                console.log(res)
+                //如果需要刷新
+                if(res[0]==1){
+                    var arr = []
+                    $.ajax({
+                        url:'showggList?arr='+arr+"&lb="+res[1],
+                        success:function (html) {
+                            $("#show").html(html)
+                            $.ajax({
+                                url:'UpdateScreenStatus',
+                                method:'post',
+                                data:{
+                                    lx:0,
+                                    status:0
+                                }
+                            });
+                            window.location.reload()
+                        }
+                    });
+                }
+            }
+        })
+    }
+</script>

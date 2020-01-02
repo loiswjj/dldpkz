@@ -1,0 +1,647 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml" style="width: 1206px;margin: auto;margin-top: 20px;">
+    <div id="lx" style="display: none;" th:text="${screen.id}"></div>
+    <input type="file" name="image_file" style="display: none;"/>
+    <input type="file" name="video_file" style="display: none;"/>
+    <div class="nav" style="background: white;height: 50px;font-size: 32px;">
+        <div style="float:left;padding-left: 15px;">
+            <i class="icon-save" style="cursor: pointer"></i>
+            <i class="iconfont icon-sun1"></i>
+            <span class="split" style="font-size: 32px;color: whitesmoke;">|</span>
+            <i class="iconfont icon-textbox"></i>
+            <i class="iconfont icon-video"></i>
+            <i class="iconfont icon-GIF"></i>
+            <i class="iconfont icon-image"></i>
+        </div>
+        <div style="color: #ff8d06; float:right;">
+            <i class="iconfont icon-see" ></i>
+            <span style="color: whitesmoke;font-size: 32px;">|</span>
+            <i class="iconfont icon-fabu"></i>
+        </div>
+    </div>
+    <div style="margin-top: 2px;height: 550px;">
+        <div class="row-tab" style="width: 150px;background: white;">
+            <div class="nav" style="font-size: 25px;">
+                <i class="iconfont second-icon icon-plus1"></i>
+                <i class="iconfont second-icon icon-kaobei"></i>
+                <i class="iconfont second-icon icon-chushaixuanxiang"></i>
+                <i class="second-icon icon-arrow-up"></i>
+                <i class="second-icon icon-arrow-down"></i>
+            </div>
+            <div class="lessPic" style="background:white;">
+                <ul>
+                    <li class="active" data-id="0">
+                        <div style="width: 120px;padding-top: 5px;">
+                            <div class="index">1&nbsp</div>
+                            <div class="pic_less"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row-tab" style="width: 850px;">
+            <div class="nav" style="background: white">
+                <i class="iconfont second-icon icon-zoom-in1"></i>
+                <span id="percent"></span>
+                <i class="iconfont second-icon icon-zoom-out1"></i>
+                <i class="iconfont second-icon icon-zishiying"></i>
+                <span style="color: whitesmoke;font-size: 28px;">|</span>
+                <i class="iconfont second-icon icon-chushaixuanxiang" onclick="deleteMedia()"></i>
+                <i class="iconfont second-icon icon-qingkong"></i>
+            </div>
+            <div class="edit_screen" th:data-width="${screen.width}" th:data-height="${screen.height}">
+            </div>
+        </div>
+        <div class="row-tab" style="width: 200px;background: white;">
+            <ul id="myTab" class="nav nav-tabs">
+                <li ><a href="#componentattr" data-toggle="tab" id="component-title">组件属性</a></li>
+                <li class="active"><a href="#pageattr" data-toggle="tab" id="page-title">页面属性</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="pageattr">
+                    <form role="form" style="padding-left: 10px;">
+                        <div class="form-group">
+                            <label>页面名称</label>
+                            <input type="text" class="form-input" id="page_name">
+                        </div>
+                        <div class="form-group">
+                            <label>播放次数</label>
+                            <input type="text" class="form-input" id="repeat_count" value="1">
+                            <div class="input-caret-align">
+                                <i class="icon-caret-up"></i>
+                                <i class="icon-caret-down"></i>
+                            </div>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="form-group">
+                            <label>时间计划表</label>
+                            <div id="schedule">
+                                <div class="schedule_item">
+                                    <span>1</span>
+                                    <i class="icon-plus"></i>
+                                </div>
+                            </div>
+                            <label>每周</label>
+                            <div class="week">
+                                <div class="week_item" data-text="7">日</div>
+                                <div class="week_item" data-text="1">一</div>
+                                <div class="week_item" data-text="2">二</div>
+                                <div class="week_item" data-text="3">三</div>
+                                <div class="week_item" data-text="4">四</div>
+                                <div class="week_item" data-text="5">五</div>
+                                <div class="week_item" data-text="6">六</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="componentattr">
+                    <form role="form" id="textAttr" style="padding-left: 10px;display: none;">
+                        <label>区域(px)</label>
+                        <div class="form-group">
+                            <div style="float: left;">
+                                <label>X</label>
+                                <input type="text" class="form-input" id="pos_x" style="width: 60px;">
+                                <div class="input-caret-align" style="left: 55px;">
+                                    <i class="icon-caret-up"></i>
+                                    <i class="icon-caret-down"></i>
+                                </div>
+                            </div>
+                            <div style="float:left;margin-left: 15px;">
+                                <label>Y</label>
+                                <input type="text" class="form-input" id="pos_y" style="width: 60px">
+                                <div class="input-caret-align" style="left: 55px;">
+                                    <i class="icon-caret-up"></i>
+                                    <i class="icon-caret-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div style="float: left;">
+                                <label>W</label>
+                                <input type="text" class="form-input" id="width" style="width: 60px;">
+                                <div class="input-caret-align" style="left: 55px;">
+                                    <i class="icon-caret-up"></i>
+                                    <i class="icon-caret-down"></i>
+                                </div>
+                            </div>
+                            <div style="float:left;margin-left: 15px;">
+                                <label>H</label>
+                                <input type="text" class="form-input" id="height" style="width: 60px">
+                                <div class="input-caret-align" style="left: 55px;">
+                                    <i class="icon-caret-up"></i>
+                                    <i class="icon-caret-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <label>基础属性</label>
+                        <div class="form-group">
+                            <label>媒体名称</label>
+                            <input class="form-input" id="text_name">
+                        </div>
+                        <label>播放属性</label>
+                        <label>播放方式</label>
+                        <div class="btn-group">
+                            <input type="radio" name="bffs" value="PAGE_SWITCH">翻页</input>
+                            <input type="radio" name="bffs" value="SCROLL">滚动</input>
+                            <input type="radio" name="bffs" value="STATIC" checked>静止</input>
+                        </div>
+                        <div class="form-group">
+                            <label>播放时长</label>
+                            <input type="time" class="form-input" id="duration" value="00:00:10">
+                            <div class="input-caret-align">
+                                <i class="icon-caret-up"></i>
+                                <i class="icon-caret-down"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <form role="form" id="mediaAttr" style="padding-left: 10px;display: none;">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="editor">
+    </div>
+</div>
+
+<script src="/static/js/jquery.ZResize.js"></script>
+<script>
+    var defaultOpts = {
+        stage: '.edit_screen', //舞台
+        itemClass: 'resize-item', //可缩放的类名
+        form: '#componentattr form:visible'
+    };
+    $('#editor').dialog({
+        modal: true,
+        draggable: true,
+        closed: true,
+        width: 750,
+        position: "center",
+        title: "文本编辑",
+    });
+    $(function () {
+        var page = findPage()
+        var screen = page.find('.edit_screen')
+        var origin_width = screen.data('width')
+        var origin_height = screen.data('height')
+        var parentWidth = $('.row-tab')[1].clientWidth - 100
+        var parentHeight = 450
+        var curr_percent = null
+        var curr_obj = null
+        var E = window.wangEditor;
+        var index = 0
+        var mediaList = []
+        var editorList = []
+        var current_pageId = 0
+        var pageCount = 1
+        var MediaContent = []
+        MediaContent.push({
+            pagename: '页面1',
+            mediaContents: [],
+            repeatcount: 1
+        })
+        $('#page_name').val('页面1')
+
+        // 默认自适应效果
+        scaleEffect(parentWidth , parentHeight)
+
+        $('#myTab a').click(function (e) {
+            e.preventDefault()
+            $(this).tab('show')
+        })
+
+        function scaleEffect(parentWidth, parentHeight) {
+            // 自适应效果
+            var percent = Math.ceil(parentWidth*100/origin_width)
+            var percent1 = Math.ceil(parentHeight*100/origin_height)
+            console.log(percent + " : " + percent1)
+            curr_percent = percent < percent1 ? percent : percent1
+            scale(curr_percent)
+        }
+
+        function scale(percent){
+            page.find('#percent').text(percent+'%')
+            screen.css('width',origin_width*percent/100+'px')
+            screen.css('height',origin_height*percent/100+'px')
+            var obj = $('.resize-item')
+            for (var i=0; i<obj.length;i++){
+                $(obj[i]).css('width',obj[0].clientWidth*percent/100+'px')
+                $(obj[i]).css('height',obj[0].clientHeight*percent/100+'px')
+            }
+        }
+        //左侧边栏按钮点击事件
+        $('.icon-plus1').click(function () {
+            // 添加page页面
+            $('.lessPic ul').append('<li data-id="'+pageCount+'">' +
+                '                        <div style="width: 120px;padding-top: 5px;">\n' +
+                '                            <div class="index">'+(pageCount+1)+'&nbsp</div>\n' +
+                '                            <div class="pic_less"></div>\n' +
+                '                        </div>\n' +
+                '                    </li>');
+            pageCount++;
+            MediaContent.push({
+                pagename: '页面'+pageCount,
+                mediaContents: [],
+                repeatcount: 1
+            });
+            $('.lessPic li').click(function () {
+                // 点击page按钮选中某页
+                $('.lessPic li').removeClass('active')
+                $(this).addClass('active')
+                current_pageId = $(this).data('id')
+                $('#page_name').val(MediaContent[current_pageId].pagename)
+            })
+        })
+
+        // 点击保存按钮
+        $('.icon-save').click(function () {
+
+        })
+
+        // 点击设置按钮
+        $('.icon-sun').click(function () {
+
+        })
+
+        // 点击text按钮
+        $('.icon-textbox').click(function () {
+            //在screen上创建text
+            mediaList.push(index)
+            $('#text_name').val('文本'+(index+1))
+            $('#component-title').tab('show')
+            $('#textAttr').show()
+            screen.append('<div class="resize-item" data-id="'+index+'"><span style="position: relative;">' +
+                '请输入文字内容</span></div>')
+            setTimeout(test,1000)
+            index++;
+            function test() {
+                defaultOpts['percent'] = curr_percent
+                new ZResize(defaultOpts)
+                $('#textAttr').find('#pos_x').val(0)
+                $('#textAttr').find('#pos_y').val(0)
+                $('#textAttr').find('#height').val(20)
+                $('#textAttr').find('#width').val(100)
+                MediaContent[current_pageId].mediaContents.push({
+                    x: 0,
+                    y: 0,
+                    width: 200,
+                    height: 20,
+                    text_align: 'left',
+                    vertial_align: 'left',
+                    mediaName: '文本'+index,
+                    playAttr: 'STATIC',
+                    speed: 2,
+                    type: 'ARCH_TEXT',
+                    content: ''
+                })
+            }
+            $('.resize-item').on('dblclick',function () {
+                var id = $(this).data('id')
+                var txt = $('#editor').find('#txt_'+id)
+                if (txt.length == 0) {
+                    $('.editor_txt').hide()
+                    $('#editor').append('<div id="txt_'+id+'" class="editor_txt" style="color: red;"></div>')
+                    var editor = new E('#txt_'+id);
+                    editor.create()
+                    editorList.push(editor)
+                } else {
+                    $('.editor_txt').hide()
+                    txt.show()
+                }
+                curr_obj = $('.resize-panel:visible').parent()
+                // console.log(curr_obj)
+                $('#editor').dialog({
+                    onClose: function () {
+                        // 将相关信息存在text中
+                        var obj = curr_obj.find('span')
+                        var editor = editorList[id]
+                        MediaContent[current_pageId][id].content = editor.txt.text()
+                        obj.text(editor.txt.text())
+                        obj.css('font-size',editor.fontsize+'px')
+                        if (editor.justifyH == 'justifyRight'){
+                            MediaContent[current_pageId][id].text_align = 'RIGHT'
+                            curr_obj.css('text-align','right')
+                        } else if(editor.justifyH == 'justifyCenter'){
+                            MediaContent[current_pageId][id].text_align = 'CENTER'
+                            curr_obj.css('text-align','center')
+                        } else {
+                            MediaContent[current_pageId][id].text_align = 'LEFT'
+                            curr_obj.css('text-align','left')
+                        }
+                        if (editor.justifyH == 'justifyRight'){
+                            obj.css('top','100%')
+                            obj.css('transform','translateY(-100%)')
+                            MediaContent[current_pageId][id].vertial_align = 'RIGHT'
+                        } else if(editor.justifyH == 'justifyCenter'){
+                            obj.css('top','50%')
+                            obj.css('transform','translateY(-50%)')
+                            MediaContent[current_pageId][id].vertial_align = 'CENTER'
+                        } else {
+                            obj.css('top','0')
+                            obj.css('transform','translateY(0)')
+                            MediaContent[current_pageId][id].vertial_align = 'LEFT'
+                        }
+                    }
+                })
+                $('#editor').dialog('open')
+            })
+        })
+
+        // 点击图片按钮
+        $('.icon-image').click(function () {
+            $("input[name='image_file']").click()
+            $("input[name='image_file']").on('change',function () {
+                // 首先验证一下文件的格式
+                var value = this.value
+                var file_type = value.substr(value.lastIndexOf("."))
+                if (!file_type.match(/.jpg|.jpeg|.png|.bmp/i)) {
+                    alert('请上传图片')
+                } else {
+                    mediaList.push(index)
+                    $('#text_name').val('图片'+(index+1))
+                    $('#component-title').tab('show')
+                    $('#textAttr').show()
+                    screen.append('<div class="resize-item" data-id="'+index+'"><span style="position: relative;">' +
+                        '请输入文字内容</span></div>')
+                    setTimeout(test,1000)
+                    index++;
+                    function test() {
+                        defaultOpts['percent'] = curr_percent
+                        new ZResize(defaultOpts)
+                        $('#textAttr').find('#pos_x').val(0)
+                        $('#textAttr').find('#pos_y').val(0)
+                        $('#textAttr').find('#height').val(20)
+                        $('#textAttr').find('#width').val(100)
+                        MediaContent[current_pageId].mediaContents.push({
+                            x: 0,
+                            y: 0,
+                            width: 200,
+                            height: 20,
+                            text_align: 'left',
+                            vertial_align: 'left',
+                            mediaName: '图片'+index,
+                            playAttr: 'STATIC',
+                            speed: 2,
+                            type: 'PICTURE',
+                            content: ''
+                        })
+                    }
+                }
+            })
+        })
+
+        // 点击视频按钮
+        $('.icon-video').click(function () {
+            $("input[name='video_file']").click()
+            $("input[name='video_file']").on('change',function () {
+                // 首先验证一下文件的格式
+                var value = this.value
+                var file_type = value.substr(value.lastIndexOf("."))
+                if (!file_type.match(/.mp4|.flv/i)) {
+                    alert('请上传视频')
+                } else {
+                    mediaList.push(index)
+                    $('#text_name').val('视频'+(index+1))
+                    $('#component-title').tab('show')
+                    $('#textAttr').show()
+                    screen.append('<div class="resize-item" data-id="'+index+'"><video></video></div>')
+                    setTimeout(test,1000)
+                    index++;
+                    function test() {
+                        defaultOpts['percent'] = curr_percent
+                        new ZResize(defaultOpts)
+                        MediaContent[current_pageId].mediaContents.push({
+                            x: 0,
+                            y: 0,
+                            width: 200,
+                            height: 20,
+                            text_align: 'left',
+                            vertial_align: 'left',
+                            mediaName: '视频'+index,
+                            playAttr: 'STATIC',
+                            speed: 2,
+                            type: 'VIDEO',
+                            content: ''
+                        })
+                    }
+                }
+            })
+        })
+
+        // 发布到控制器上
+        $('.icon-fabu').click(function () {
+            var programContent = {
+                pageContents: MediaContent
+            }
+            $.ajax({
+                url: 'sendEditContent?screen_id='+parseInt(findPage().find('#lx').text())+'&str='
+                    +encodeURI(JSON.stringify(programContent)),
+                type: 'post',
+                success: function (res) {
+                    alert(res)
+                }
+            })
+        })
+
+        //放大
+        $('.icon-zoom-in').click(function () {
+            curr_percent += 10;
+            scale(curr_percent)
+        })
+
+        //缩小
+        $('.icon-zoom-out').click(function () {
+            curr_percent -= 10;
+            scale(curr_percent)
+        })
+
+        // 清空画布
+        $('.icon-qingkong').click(function () {
+            $('.resize-item').remove()
+        })
+
+        $('#pos_x').on('input',function () {
+            // 绑定输入事件
+            curr_obj = $('.resize-panel:visible').parent()
+            curr_obj.css('left',$(this).val()+'px')
+            var i = parseInt(curr_obj.data('id'))
+            MediaContent[current_pageId].mediaContents[i].x = parseInt($(this).val())
+        })
+
+        $('#pos_y').on('change',function () {
+            // 绑定输入事件
+            curr_obj = $('.resize-panel:visible').parent()
+            curr_obj.css('top',$(this).val()+'px')
+            var i = parseInt(curr_obj.data('id'))
+            MediaContent[current_pageId].mediaContents[i].y = parseInt($(this).val())
+        })
+
+        $('#width').on('change',function () {
+            // 绑定输入事件
+            curr_obj = $('.resize-panel:visible').parent()
+            curr_obj.css('width',$(this).val()+'px')
+            var i = parseInt(curr_obj.data('id'))
+            MediaContent[current_pageId].mediaContents[i].width = parseInt($(this).val())
+        })
+
+        $('#height').on('change',function () {
+            // 绑定输入事件
+            curr_obj = $('.resize-panel:visible').parent()
+            curr_obj.css('height',$(this).val()+'px')
+            var i = parseInt(curr_obj.data('id'))
+            MediaContent[current_pageId].mediaContents[i].height = parseInt($(this).val())
+        })
+
+        $('#text_name').on('change',function () {
+            curr_obj = $('.resize-panel:visible').parent()
+            var i = parseInt(curr_obj.data('id'))
+            MediaContent[current_pageId].mediaContents[i].mediaName = parseInt($(this).val())
+        })
+
+        $('#page_name').on('change',function () {
+            MediaContent[current_pageId].pagename = $(this).val()
+        })
+    })
+
+    function deleteMedia() {
+        var obj = $('.resize-panel:visible').parent()
+        obj.remove()
+    }
+
+    function openVideo() {
+
+    }
+
+    function openImage() {
+
+    }
+</script>
+<style>
+
+    label{
+        font-size: 10px;
+    }
+    .row-tab{
+        float: left;
+        margin-right: 2px;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .pic_less{
+        float: right;
+        background: #000;
+        width: 100px;
+        height: 40px;
+    }
+
+    .lessPic ul{
+        list-style: none;
+        text-decoration: none;
+        padding: 0;
+    }
+
+    .resize-item{
+        position: absolute;
+        width: 100px;
+        height: 20px;
+        border: solid 1px grey;
+        color: red;
+    }
+
+    .lessPic li{
+        height: 50px;
+    }
+
+    .lessPic .active{
+        background: #00aeff;
+        text-decoration: none;
+    }
+
+    .form-input{
+        width: 138px;
+    }
+
+    .input-caret-align{
+        width: 10px;
+        position: relative;
+        /* float: right; */
+        top: -30px;
+        left: 166px;
+    }
+
+    .icon-caret-up{
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .icon-caret-down{
+        font-size: 20px;
+        position: relative;
+        top: -10px;
+        cursor: pointer;
+    }
+
+    .row-tab .nav-tabs{
+        border: 0;
+        /*width: 50%;*/
+        background-color: #ecf0f5;
+    }
+
+    .row-tab .nav-tabs li {
+        width: 100px;
+    }
+
+    .row-tab .nav-tabs .active{
+        background-color: white;
+    }
+
+    .index{
+        float: left;
+        padding-top: 9%;
+        padding-left: 5px;
+    }
+
+    .edit_screen{
+        background: black;
+        margin: auto;
+        margin-top: 20px;
+        position: relative;
+    }
+
+    .second-icon{
+        font-size: 20px;
+        color: #aaaaaa;
+        cursor: pointer;
+    }
+    
+    .second-icon :hover{
+        color: red;
+    }
+
+    .divider{
+        width: 85%;
+        height: 1px;
+        background: #eeeeee;
+        margin: auto;
+    }
+
+    .week{
+        margin: auto;
+        width: 180px;
+    }
+    
+    .week_item{
+        float: left;
+        width: 20px;
+        height: 20px;
+        background: #01adff;
+        margin-left: 5px;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .form-group{
+        height: 30px;
+        margin-top: 10px;
+    }
+</style>

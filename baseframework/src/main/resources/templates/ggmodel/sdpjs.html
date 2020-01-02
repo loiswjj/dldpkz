@@ -1,0 +1,146 @@
+<div class="clearfix" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="leftdiv">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 15px;">公告内容</span>
+        </div>
+        <div class="xq_container">
+            <input type="hidden" id="bh"/>
+            <input hidden="hidden" name="ajmc" th:value="${ggmodel.ajmc}"/>
+            <input hidden="hidden" name="ajxh" th:value="${ggmodel.ajxh}"/>
+            <div id="title">
+                <span>送达判决书公告</span>
+            </div>
+            <div>
+                <select name="bg">
+                    <option th:each="item:${ggmodel.bg}" th:value="${item}"
+                            th:text="${item}"></option>
+                </select>
+            </div>
+            <div>
+                <span>本院受理</span>
+                <select name="yg">
+                    <option th:each="item:${ggmodel.yg}" th:value="${item}"
+                            th:text="${item}"></option>
+                </select>
+                <span>诉你</span>
+                <input name="ay" th:value="${ggmodel.ay}"/>
+                <span>一案已审理终结。现依法向你公告送达</span>
+                <input name="ah" th:value="${ggmodel.ah}" />
+                <span>民事裁判书。自公告之日起60日内来本院领取民事裁判书，逾期则视为送达。
+                    如不服本判决，可在公告期满15日内，向本院递交上诉状及副本，上诉于天津市第二中级人民法院。
+                    逾期本判决即发生法律效力。</span>
+            </div>
+            <div id="footer">
+                <input name="fy" th:value="${fy}" readonly="readonly"/>
+                <input name="fbsj"  id="fbsj" readonly="readonly"/>
+            </div>
+        </div>
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-left: 30%">
+            <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <button type="button" class="btn btn-secondary" onclick="readPic_sdpjs()">
+                    <span class="icon-file-text"><span class="navPadding">预览 </span></span></button>
+                <button type="button" class="btn btn-secondary" id="release" onclick="release2()" disabled="disabled">
+                    <span class="icon-bullhorn"><span class="navPadding">发布</span></span></button>
+                <button type="button" class="btn btn-secondary" onclick="exit_sdpjs()">
+                    <span class="icon-off"><span class="navPadding">关闭</span></span></button>
+            </div>
+        </div>
+    </div>
+    <div class="rightdiv">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 15px;">大屏预览</span>
+        </div>
+        <div class="screen">
+            <div id="ggnr_title" style="text-align: center"></div>
+            <span id="ggnr"></span>
+            <div id="fy" style="text-align: right"></div>
+            <div id="fbrq" style="text-align: right;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var nowTime = new Date();
+        var month =nowTime.getMonth()+1;
+        var day = nowTime.getDate()
+        var str = nowTime.getFullYear() + "年" ;
+        var str1 = nowTime.getFullYear() + "-" ;
+        if(month<10){
+            str +="0"+month + "月" ;
+            str1+="0"+month + "-"
+        }else{
+            str +=month + "月" ;
+            str1+=month + "-"
+        }
+        if(day<10){
+            str +="0"+nowTime.getDate()+"日";
+            str1 += "0"+nowTime.getDate();
+        }else {
+            str +=nowTime.getDate()+"日";
+            str1 += nowTime.getDate();
+        }
+        var page = findPage();
+        page.find('#fbsj').text(str);
+        page.find('#fbsj').val(str1);
+        page.find('#fbsj').datebox({
+            panelWidth: 300,
+            panelHeight: 210,
+            editable: false
+        });
+    })
+
+    //发布
+    function release2() {
+        var obj = findPage();
+        var ggobj = obj.find('.xq_container');
+        var id = obj.find("input[name='bh']").val();
+        var ajxh = obj.find("input[name='ajxh']").val();
+        var ah = obj.find("input[name='ah']").val();
+        var ajmc = obj.find("input[name='ajmc']").val();
+        var nr = ggnr(ggobj);
+        var data = {
+            id:id,
+            ah: ah,
+            ajxh:parseInt(ajxh),
+            ajmc: ajmc,
+            gglx: 3,
+            fbsj: obj.find('#fbsj').val(),
+            ggnr: nr,
+            status: 1
+        };
+        $.ajax({
+            url: "/addgg",
+            method: 'post',
+            data: JSON.stringify(data),
+            success: function (data) {
+                obj.find("input[name='bh']").val(data);
+                $.messager.show({
+                    title: "提示信息",
+                    msg: "成功插入一条公告！"
+                });
+            }
+        })
+    }
+
+    //预览
+    function readPic_sdpjs() {
+        var obj = findPage();
+        var ggobj = obj.find('.xq_container');
+        obj.find('#release').removeAttr('disabled');
+        obj.find('#ggnr').html(ggnr(ggobj));
+        obj.find('#ggnr_title').text('送达判决书公告');
+        obj.find('#fy').text($("input[name='fy']").val());
+        obj.find('#fbrq').text($("input[name='fbsj']").val());
+    }
+
+    //关闭
+    function exit_sdpjs() {
+        var obj = findPage();
+        var ah = obj.find("input[name='ah']").val();
+        var href =encodeURI('/ggmodel?ah=' + ah + "&gglx=" + 3);
+        PageRemove(href);
+    }
+</script>

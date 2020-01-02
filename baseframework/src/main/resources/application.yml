@@ -1,0 +1,53 @@
+#端口配置
+server:
+  port: 8081
+  tomcat:
+    uri-encoding: utf-8
+    max-http-post-size: 1048567
+  servlet:
+    session:
+      timeout: 600s
+  max-http-header-size: 1048567
+
+#视图层控制
+spring:
+  mvc:
+    view:
+      prefix: classpath:/templates/
+      suffix: .html
+    static-path-pattern: /static/**
+#  profiles:
+#    active: dev
+  thymeleaf:
+    cache: false
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+  jpa:
+    open-in-view: false
+
+    hibernate:
+      ddl-auto: update
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+  messages:
+    encoding: UTF-8
+  servlet:
+  # 文件传输设置
+    multipart:
+      enabled: true
+      file-size-threshold: 0
+      max-file-size: 1000Mb
+      max-request-size: 1000Mb
+  datasource:
+    dbcp2:
+      test-on-borrow: true
+      validation-query: SELECT 1
+
+
+# 日志配置
+logging:
+  config: classpath:config/logging-config.xml

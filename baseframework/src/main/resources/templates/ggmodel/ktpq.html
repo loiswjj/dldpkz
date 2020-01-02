@@ -1,0 +1,101 @@
+<div class="clearfix" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="leftdiv">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 15px;">公告内容</span>
+        </div>
+        <div class="xq_container ggnr">
+            <input hidden="true" name="ah" th:value="${ggmodel.ah}"/>
+            <div>
+                <input th:value="${fy}" disabled="disabled"/>
+                <span>开庭公告 编号：</span>
+                <input contenteditable="false"/>
+            </div>
+            <div>
+                <span>原告:</span>
+                <select>
+                    <option th:each="item:${ggmodel.yg}" th:value="${item}"
+                            th:text="${item}"></option>
+                </select>
+            </div>
+            <div>
+                <span>被告:</span>
+                <select>
+                    <option th:each="item:${ggmodel.bg}" th:value="${item}"
+                        th:text="${item}"></option>
+                </select>
+            </div>
+            <div>
+                <span>案由:</span>
+                <input disabled="disabled" name="ay" th:value="${ggmodel.ay}"/>
+            </div>
+            <div>
+                <span>开庭日期：</span>
+                <input />
+            </div>
+            <div>
+                <span>开庭地点：</span>
+                <input class="require"/>
+            </div>
+            <div>
+                <span>承办人：</span>
+                <input th:value="${fbr}" disabled="disabled"/>
+            </div>
+            <div>
+                <span>旁听人数：</span>
+                <input class="require"/>
+            </div>
+            <div id="footer">
+                <input name="fy" th:value="${fy}" disabled="disabled"/>
+                <input name="fbsj" id="fbsj" readonly="readonly"/>
+            </div>
+        </div>
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-left: 30%">
+            <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <button type="button" class="btn btn-secondary" onclick="readPic_ktpq()">
+                    <span class="icon-file-text"><span class="navPadding">预览 </span></span></button>
+                <button type="button" class="btn btn-secondary" id="release" disabled="disabled">
+                    <span class="icon-bullhorn"><span class="navPadding">发布</span></span></button>
+                <button type="button" class="btn btn-secondary" onclick="exit_ktpq()" >
+                    <span class="icon-off"><span class="navPadding">关闭</span></span></button>
+            </div>
+        </div>
+    </div>
+    <div class="rightdiv">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 15px;">大屏预览</span>
+        </div>
+        <div class="screen">
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="bh"/>
+
+<script>
+    $(function () {
+        var nowTime = new Date();
+        var str = nowTime.getFullYear() + "年" + nowTime.getMonth() + "月" + nowTime.getDate() + "日";
+        $('#fbsj').val(str);
+        $('#fbsj').datebox({
+            panelWidth: 300,
+            panelHeight: 210,
+            editable: false
+        });
+    });
+    //预览
+    function readPic_ktpq() {
+        var obj = findPage();
+        var ggobj = obj.find('.xq_container');
+        $('#release').attr('disabled','disabled');
+        $('.screen').html(ggnr(ggobj));
+    }
+    //关闭
+    function exit_ktpq() {
+        var obj = findPage();
+        var ah = obj.find('input[name="ah"]').val();
+        var href =encodeURI('/ggmodel?ah=' + ah + "&gglx=" + 2);
+        PageRemove(href);
+    }
+</script>

@@ -1,0 +1,253 @@
+package nju.software.baseframework.controller;
+
+import nju.software.baseframework.Timer.AppInitializer;
+import nju.software.baseframework.configuration.FilterConfig;
+import nju.software.baseframework.configuration.SessionUserListener;
+import nju.software.baseframework.data.dataobject.Nav;
+import nju.software.baseframework.data.dataobject.Yhb;
+import nju.software.baseframework.data.dynamicdDatabases.DynamicDataSource;
+import nju.software.baseframework.data.vo.*;
+import nju.software.baseframework.service.AjlbService;
+import nju.software.baseframework.service.GgService;
+import nju.software.baseframework.service.YhService;
+import nju.software.baseframework.service.YyService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
+@Controller
+public class IndexController {
+    @Autowired
+    YhService yhService;
+
+    @Autowired
+    AjlbService ajlbService;
+
+    @Autowired
+    YyService yyService;
+
+    @Autowired
+    GgService ggService;
+
+    @RequestMapping(value = "getLogin", method = RequestMethod.GET)
+    public String index(HttpServletRequest request, HttpSession session,
+                        ModelMap modelMap) {
+        String user = request.getParameter("user");
+        String fydm = FYEnum.TJDL.getFydm();
+        Yhb yh = null;
+        if (user != null) {
+            /**
+             * 用于给审判一个url让他们跳转
+             */
+            DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+            yh = yhService.getYh(user);
+            session.setAttribute(FilterConfig.SESSION_KEY, yh);
+            SessionUserListener.addUserSession(session);
+            HttpSession another = SessionUserListener.checkIfHasLogin(yh);
+            //说明此用户已登录
+            if (another != null) {
+                //将原来的用户从session池里面清除
+                SessionUserListener.removeSession(another.getId());
+                String tips = "您的账号已在其他地方登录！";
+                another.setAttribute("msg", tips);
+            }
+            session.setAttribute("fydm", fydm);
+            session.setAttribute("fy", FYEnum.getNameByFYDM(fydm));
+            Map<Integer,List<Nav>> navList = null;
+            Integer sfyx = yh.getSfyx();
+            if(sfyx==1){
+                Integer qx_code = yhService.getYhqx(yh.getYhdm());
+                navList = yhService.getNav(qx_code);
+            }
+            modelMap.addAttribute("yh", yh);
+            modelMap.addAttribute("navlist", navList);
+            return "FirstPage";
+        } else {
+            String tips = request.getParameter("msg");
+            if(tips!=null){
+                try {
+                    tips = URLDecoder.decode(tips,"UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+            modelMap.addAttribute("msg", tips);
+            modelMap.addAttribute("fyName",FYEnum.getNameByFYDM(fydm));
+            return "login";
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "login", method = RequestMethod.POST)
+    public String login(@RequestParam String fydm,
+                        @RequestParam String username,
+                        @RequestParam String password,
+                        HttpSession session) {
+        /**
+         * 切换数据源
+         */
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        Yhb yh = yhService.getYh(username);
+        String returnMsg = yhService.checkYhPwd(yh, password);
+        if (returnMsg.equals("success")) {
+            SessionUserListener.addUserSession(session);
+            HttpSession another = SessionUserListener.checkIfHasLogin(yh);
+            //说明此用户已登录
+            if (another != null) {
+                //将原来的用户从session池里面清除
+                SessionUserListener.removeSession(another.getId());
+                String tips = "您的账号已在其他地方登录！";
+                another.setAttribute("msg", tips);
+            }
+            session.setAttribute("fydm", fydm);
+            session.setAttribute("fy", FYEnum.getNameByFYDM(fydm));
+            session.setAttribute(FilterConfig.SESSION_KEY, yh);
+        }
+        return returnMsg;
+    }
+
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String index(ModelMap modelMap, HttpSession session) {
+        Yhb yh = (Yhb) session.getAttribute(FilterConfig.SESSION_KEY);
+        String fydm = (String)session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+
+        Map<Integer,List<Nav>> navList = null;
+        Integer sfyx = yh.getSfyx();
+        if(sfyx==1){
+            Integer qx_code = yhService.getYhqx(yh.getYhdm());
+            navList = yhService.getNav(qx_code);
+        }
+        modelMap.addAttribute("yh", yh);
+        modelMap.addAttribute("navlist", navList);
+        return "FirstPage";
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout(HttpSession session) {
+        session.removeAttribute(FilterConfig.SESSION_KEY);
+        SessionUserListener.DropSession(session.getId());
+        session.removeAttribute("fydm");
+        session.removeAttribute("fy");
+        return "login";
+    }
+
+    @RequestMapping(value = "/home", method = RequestMethod.GET)
+    public String home(ModelMap modelMap,HttpSession session) {
+        String fydm = (String) session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        List<Long> list = yyService.getSjtj();
+        modelMap.addAttribute("zxyy", list.get(0));
+        modelMap.addAttribute("lsyy", list.get(1));
+        modelMap.addAttribute("zzfb", list.get(2));
+        modelMap.addAttribute("jsfb", list.get(3));
+        return "home";
+    }
+
+    @RequestMapping(value = "/ajlb", method = RequestMethod.GET)
+    public String ajlb(ModelMap modelMap, HttpSession session) {
+        String fydm = (String) session.getAttribute("fydm");
+        Yhb yh = (Yhb) session.getAttribute(FilterConfig.SESSION_KEY);
+        modelMap.addAttribute("fybh",FYEnum.getFybhByFydm(fydm));
+        modelMap.addAttribute("jfr", yh.getYhmc());
+        modelMap.addAttribute("ajxz", AppInitializer.ajxz);
+        modelMap.addAttribute("spt", AppInitializer.spt.get(fydm));
+        modelMap.addAttribute("sycx", AppInitializer.sycx);
+        modelMap.addAttribute("jafs", AppInitializer.jafs);
+        modelMap.addAttribute("ajzt", AppInitializer.ajzt);
+        return "ajlb";
+    }
+
+    @RequestMapping(value = "/ggcx", method = RequestMethod.GET)
+    public String ggcx(ModelMap modelMap) {
+        modelMap.addAttribute("gglx", AppInitializer.gglx);
+        modelMap.addAttribute("ggzt", AppInitializer.ggzt);
+        return "ggcx";
+    }
+
+
+    @RequestMapping(value = "/sjtj", method = RequestMethod.GET)
+    public String sjtj(HttpSession session, ModelMap modelMap) {
+        String fydm = (String) session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        List<GgTjModel> ggTjModels = ajlbService.ggTj();
+        List<yyTjModel> yyTjModels = ajlbService.yyTj();
+        session.setAttribute("ggTj", ggTjModels);
+        session.setAttribute("yyTj", yyTjModels);
+        modelMap.addAttribute("spt", AppInitializer.spt.get(fydm));
+        modelMap.addAttribute("ajxz", AppInitializer.ajxz);
+        modelMap.addAttribute("jafs", AppInitializer.jafs);
+        return "sjtj";
+    }
+
+    @RequestMapping(value = "/ggxq", method = RequestMethod.GET)
+    public String ggxq(HttpServletRequest request,
+                       ModelMap modelMap, HttpSession session) {
+        String fydm = (String) session.getAttribute("fydm");
+        String bh = request.getParameter("bh");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        GgxqModel ggb = null;
+        Integer id;
+        if (bh != null) {
+            id = Integer.parseInt(bh);
+            ggb = ggService.findGgbByBh(id);
+            modelMap.addAttribute("lx", 1);
+        }
+        String ah = request.getParameter("ah");
+        String gglx = request.getParameter("gglx");
+        if (ah != null && gglx != null) {
+            ggb = ggService.findGgbByAhAndGglx(ah, Integer.parseInt(gglx));
+            modelMap.addAttribute("lx", 2);
+        }
+        DynamicDataSource.router(fydm);
+        AjxqModel aJjb = ajlbService.getAjxxByAh(ggb.getAh());
+        Map<String, String> gglxmap = GGLXEnum.getGglxMap();
+        modelMap.addAttribute("ajxq", aJjb);
+        modelMap.addAttribute("ggb", ggb);
+        modelMap.addAttribute("gglx", gglxmap);
+        modelMap.addAttribute("fy", FYEnum.getNameByFYDM(fydm));
+        return "ggxq";
+    }
+
+    @RequestMapping(value = "/ggmodel", method = RequestMethod.GET)
+    public String GgModel(@RequestParam String ah,
+                          @RequestParam String gglx,
+                          ModelMap map, HttpSession session) {
+        /**
+         * 切换数据库到本地库 -- 查询公告表
+         */
+        String fydm = (String) session.getAttribute("fydm");
+        DynamicDataSource.router(fydm);
+        GgModel ggModel = ggService.getGgModelByAh(ah);
+        String fy = (String) session.getAttribute("fy");
+        map.addAttribute("ggmodel", ggModel);
+        map.addAttribute("fy", fy);
+        Yhb yh = (Yhb) session.getAttribute(FilterConfig.SESSION_KEY);
+        map.addAttribute("fbr", yh.getYhmc());
+        String res = GGLXEnum.getPathByNumber(gglx.trim());
+        return res;
+    }
+
+    @RequestMapping(value = "/ajxq", method = RequestMethod.GET)
+    public String ajxq(@RequestParam String ah,
+                       HttpSession session, ModelMap map) {
+        String fydm = (String) session.getAttribute("fydm");
+        DynamicDataSource.router(fydm);
+        AjxqModel model = ajlbService.getAjxxByAh(ah);
+        model.setBm(yhService.getMs("bm", model.getBm()));
+        map.addAttribute("ajxq", model);
+        return "ajxq";
+    }
+}

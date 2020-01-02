@@ -1,0 +1,47 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <div id="fybh" th:text="${fybh}" style="display: none;"></div>
+    <ul>
+        <li th:each="item:${gglx}" style="list-style-type: none">
+            <input type="checkbox" data-lx="2" th:text="${item.dmms}" th:value="${item.dmbh}"/>
+        </li>
+    </ul>
+
+    <button class="btn btn-primary" id="submit" style="width: 180px;">发布</button>
+    <div id="lx" th:text="${lx}" style="display:none;"></div>
+</div>
+
+<script>
+    $(function () {
+        findPage().find('#submit').click(function () {
+            var arr = getSelected();
+            $.ajax({
+                url: 'sendGgList?arr='+arr+'&lx='+parseInt($('#lx').text()),
+                method: 'post',
+                success: function (res) {
+                    if(res){
+                        alert("信息成功发送至大屏！")
+                    }else alert(res)
+                }
+            })
+        })
+    })
+
+    /**
+     * 获得有哪些被选中的CheckBox
+     * @returns {Array}
+     */
+    function getSelected() {
+        var obj = findPage();
+        var arr = []
+        obj.find("input[type=checkbox]").each(function (k,v) {
+            if($(v)[0].checked){
+                if($(v).data('lx')=='1'){
+                    arr.push(parseInt($(v).val()));
+                }else {
+                    arr.push(parseInt($(v).val()))
+                }
+            }
+        });
+        return arr;
+    }
+</script>

@@ -1,0 +1,219 @@
+<div class="clearfix" xmlns:th="http://www.w3.org/1999/xhtml">
+    <input hidden="hidden" name="lx" th:value="${lx}"/>
+    <div class="leftdiv">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 14px;">当前公告</span>
+        </div>
+        <div th:if="${ggb}!=null" class="xq_container">
+            <input name="id" hidden="hidden" th:value="${ggb.id}">
+            <input name="gglx" hidden="hidden" th:value="${ggb.gglx0}"/>
+            <div style="line-height: 38px;">
+                <span>当前公告状态：<span th:text="${ggb.ggzt}"></span></span>
+            </div>
+            <div style="line-height: 38px;">
+                <span>公告类型：<span th:text="${ggb.gglx}"></span></span>
+            </div>
+            <div style="line-height: 38px;">
+                <span>公告发布时间：<span th:text="${ggb.fbsj}"></span></span>
+            </div>
+            <div style="line-height: 38px;">
+                <span>公告剩余时间：<span th:text="${ggb.ggsysj}"></span></span>
+            </div>
+        </div>
+
+        <div th:if="${ggb}!=null" class="screen">
+            <div id="ggnr_title" style="text-align: center" th:text="${ggb.gglx}"></div>
+            <span id="ggnr" th:text="${ggb.ggnr}"></span>
+            <div id="fy" style="text-align: right" th:text="${fy}"></div>
+            <div id="fbrq" style="text-align: right;" th:text="${ggb.fbsj}"></div>
+        </div>
+        <a id="xz" href="" download="" style="display: none;" target="_blank"></a>
+
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-left: 30%">
+            <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <button type="button" class="btn btn-secondary" onclick="addGg()">
+                    <span class="icon-edit dropdown-toggle" data-toggle="dropdown">
+                        <span class="navPadding">新增公告</span>
+                        <b class="caret"></b>
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li th:each="item:${gglx}" th:value="${item.key}" th:text="${item.value}" onclick="addPanel(this)"></li>
+                    </ul>
+                </button>
+                <button th:if="${ggb.gglx0!=3}" type="button" class="btn btn-secondary" onclick="drop_gg()">
+                    <span class="icon-trash"><span class="navPadding">作废</span></span></button>
+                <button th:if="${ggb.gglx0==3}" type="button" class="btn btn-secondary" onclick="recover_gg()">
+                    <span class="icon-refresh"><span class="navPadding">恢复</span></span></button>
+                <button type="button" class="btn btn-secondary" id="download">
+                    <span class="icon-download"><span class="navPadding">下载</span></span></button>
+                <button type="button" class="btn btn-secondary" onclick="exit_gg()">
+                    <span class="icon-off"><span class="navPadding">退出</span></span></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="rightdiv">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 14px;">案件详情</span>
+        </div>
+        <div class="xq_container">
+            <div>
+                <div><span>案号：        </span><span id="ah" th:text="${ajxq.ah}"></span></div>
+            </div>
+            <div>
+                <div><span>案件名称：    </span><span th:text="${ajxq.ajmc}"></span></div>
+            </div>
+            <div>
+                <div><span>适用程序：    </span><span th:text="${ajxq.sycx}"></span></div>
+            </div>
+            <div>
+                <div><span>立案日期：    </span><span th:text="${ajxq.larq}"></span></div>
+            </div>
+            <div>
+                <div><span>剩余审理天数：</span><span th:text="${ajxq.syslts}"></span></div>
+            </div>
+            <div>
+                <div><span>审判长：      </span><span th:text="${ajxq.spz}"></span></div>
+            </div>
+            <div>
+                <div><span>审判员：      </span><span th:text="${ajxq.spy}"></span></div>
+            </div>
+            <div>
+                <div><span>法官助理：    </span><span th:text="${ajxq.fgzl}"></span></div>
+            </div>
+            <div>
+                <div><span>当事人：      </span><span th:text="${ajxq.dsr}"></span></div>
+            </div>
+            <div>
+                <div><span>关联联系人：  </span><span th:text="${ajxq.gllxr}"></span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        findPage().find("input[name='fbsj']").datetimebox({
+            panelWidth: 300,
+            panelHeight: 210,
+            editable: false,
+            showSeconds: true
+        });
+        //按照指定格式显示公告
+        var text = findPage().find('#ggnr').text();
+        findPage().find('#ggnr').html(text);
+
+        //下载公告
+        findPage().find("#download").click(function () {
+            var obj = findPage().find(".screen")
+            html2canvas(obj
+            ).then(function (value) {
+                var timestamp = Date.parse(new Date());
+                findPage().find('#xz').attr('href',value.toDataURL('image/png'));
+                findPage().find('#xz').attr('download',timestamp+'.png');
+                //点击下载
+                findPage().find('#xz')[0].click();
+            })
+        })
+    })
+
+    /*退出按钮*/
+    function exit_gg() {
+        var page = findPage();
+        var bh = page.find("input[name='id']").val();
+        var ah = page.find("#ah").text();
+        var gglx = page.find("input[name='gglx']").val();
+        var lx = page.find("input[name='lx']").val();
+        if(lx==1){
+            PageRemove('/ggxq?bh='+bh);
+        }else {
+            PageRemove('/ggxq?ah='+encodeURI(ah)+'&gglx='+gglx);
+        }
+    }
+
+    /*作废按钮*/
+    function drop_gg() {
+        //将当前的状态改成废弃； 3
+        var page = findPage();
+        var bh = page.find("input[name='id']").val();
+        var href = 'updategg';
+        $.messager.confirm('提示信息', '确认废弃?', function (r) {
+            if (r) {
+                $.ajax({
+                    url: href,
+                    data: {'id': parseInt(bh),"ggzt":3},
+                    type: 'post',
+                    success: function () {
+                        $.messager.show({
+                            title: "更新结果",
+                            msg: "该预约成功废弃！"
+                        });
+                        var afterUpdate = 'ggxq';
+                        $.ajax({
+                            url: afterUpdate,
+                            data: {
+                                'bh': bh
+                            },
+                            success: function (html) {
+                                $("#page-content").html(html);
+                            }
+                        });
+                    }
+
+                });
+            }
+        });
+    }
+
+    //恢复按钮
+    function recover_gg() {
+        var page = findPage();
+        var bh = page.find("input[name='id']").val();
+        var href = 'updategg';
+        $.messager.confirm('提示信息', '确认恢复?', function (r) {
+            if (r) {
+                $.ajax({
+                    url: href,
+                    data: {'id': parseInt(bh),"ggzt":1},
+                    type: 'Post',
+                    success: function () {
+                        $.messager.show({
+                            title: "更新结果",
+                            msg: "该预约成功恢复！"
+                        });
+                        var afterUpdate = 'ggxq';
+                        $.ajax({
+                            url: afterUpdate,
+                            data: {
+                                'bh': bh
+                            },
+                            success: function (html) {
+                                $("#page-content").html(html);
+                            }
+                        });
+                    }
+
+                });
+            }
+        });
+    }
+
+    /**
+     * 新增公告
+     */
+    function addGg() {
+        var zt = findPage().find('ul.dropdown-menu').css('display');
+        if(zt=='none'){
+            findPage().find('ul.dropdown-menu').css('display','block');
+        }else {
+            findPage().find('ul.dropdown-menu').css('display','none');
+        }
+    }
+    function addPanel(obj) {
+        var lx = $(obj).val();
+        var page = findPage();
+        addElement($('#curNav'),'/ggmodel?ah='+encodeURI(page.find("#ah").text())+'&gglx='+lx,'',Gglx(parseInt(lx)));
+    }
+</script>

@@ -1,0 +1,114 @@
+<div class="clearfix">
+    <div class="xq_nav">
+        <span style="font-weight: bold;">|</span>
+        <span>视频管理</span>
+    </div>
+    <div class="xq_nav">
+        <table id="spgl"></table>
+    </div>
+</div>
+
+<div class="xq_nav">
+    <span style="font-weight: bold;">|</span>
+    <span>视频文件上传</span>
+    <form id="upload" action="/fileUpload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" style="float: left;"/>
+        <input type="submit" class="btn btn-info" value="视频文件上传"/>
+    </form>
+    <label id="message"></label>
+</div>
+
+<script>
+    $(function () {
+        var options = {
+            target: '#message',
+        };
+        $('#upload').submit(function () {
+            if(checkFile()==true){
+                $(this).ajaxSubmit(options);
+                //重新刷新
+                $('#spgl').datagrid('reload');
+            }
+            return false;
+        });
+
+        var tablewidth = document.documentElement.clientWidth - 260;
+        $('#spgl').datagrid({
+            width: tablewidth,
+            nowrap: true,
+            height: 'auto',
+            singleSelect: true,
+            striped: true,
+            scrollbarSize: 0,
+            rownumbers: true,
+            url: "getSp",
+            loadMsg: "数据正在加载.....",
+            pagination: true,
+            pageList: [5, 10, 15, 20, 50],
+            pageSize: 20,
+            columns: [
+                [
+                    {field: 'wjm', title: '视频文件名', width: tablewidth * 0.31, align: 'center'},
+                    {
+                        field: 'zt', title: '是否播放', width: tablewidth * 0.30,
+                        align: 'center',
+                        formatter: function (value,record) {
+                            if(value=='0'){
+                                return '<img style="width: 30px" data-url="'+record.id+'" class="icon" ' +
+                                    'onclick="changezt(this)" ' +
+                                    'src="../../static/image/off.png"/>';
+                            }else {
+                                return '<img style="width: 30px;" data-url="'+record.id+'" ' +
+                                    'class="icon" onclick="changezt(this)"'  +
+                                    ' src="../../static/image/on.png"/>'
+                            }
+                        }
+                    },
+                    {
+                        field:'id',title:'操作',width:tablewidth*0.35,align:'center',
+                        formatter:function (value) {
+                            return '<image class="icon" data-toggle="tooltip" ' +
+                                'data-placement="bottom" data-url="'+value+'" ' +
+                                'title="删除视频"' +
+                                ' onclick="deleteSp(this)" src="../../static/image/fail.png"/>'
+                        }
+                    }
+                ]
+            ]
+        });
+    });
+    function changezt(obj) {
+        var src = $(obj)[0].src;
+        var id = $(obj).data('url');
+        var zt = 0;
+        if(src =='http://localhost:8081/static/image/on.png'){
+            $(obj)[0].src = '../../static/image/off.png';
+        }else {
+            $(obj)[0].src = '../../static/image/on.png';
+            zt = 1;
+        }
+        //更新
+        $.ajax({
+            url:'UpdateWjb',
+            type:'post',
+            data:{
+                id:id,
+                zt:zt
+            }
+        })
+    }
+
+    function deleteSp(obj) {
+        var id = $(obj).data('url');
+        $.ajax({
+            url:'deleteSp',
+            type:'post',
+            data:{
+                id:parseInt(id)
+            },
+            success:function () {
+                $('#spgl').datagrid('reload');
+            }
+        })
+    }
+</script>

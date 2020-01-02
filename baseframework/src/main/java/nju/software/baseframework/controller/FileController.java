@@ -1,0 +1,246 @@
+package nju.software.baseframework.controller;
+
+import nju.software.baseframework.data.dao.NavDao;
+import nju.software.baseframework.data.dao.WelcomeTxtDao;
+import nju.software.baseframework.data.dao.WjbDao;
+import nju.software.baseframework.data.dataobject.*;
+import nju.software.baseframework.data.dynamicdDatabases.DynamicDataSource;
+import nju.software.baseframework.data.vo.FYEnum;
+import nju.software.baseframework.service.AdminService;
+import nju.software.baseframework.service.GgService;
+import nju.software.baseframework.service.ScreenService;
+import nju.software.baseframework.util.ArrayUtil;
+import nju.software.baseframework.util.DateUtil;
+import nju.software.baseframework.util.Image2Base64;
+import nju.software.baseframework.util.WordFileUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Decoder;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.*;
+import java.util.*;
+import java.util.logging.Logger;
+
+/**
+ * 实现文件的上传下载
+ */
+@Controller
+public class FileController {
+    private static Logger logger = Logger.getLogger(String.valueOf(FileController.class));
+    @Resource
+    private GgService ggService;
+
+    @Resource
+    private ScreenService screenService;
+
+    @Autowired
+    private WjbDao wjbDao;
+
+    @Autowired
+    private NavDao navDao;
+
+    @Autowired
+    private WelcomeTxtDao welcomeTxtDao;
+
+    @Resource
+    private AdminService adminService;
+
+    @ResponseBody
+    @RequestMapping(value = "/fileUpload",method = RequestMethod.POST)
+    public String fileUpload(@RequestParam MultipartFile file,@RequestParam String lx,
+                             HttpSession session){
+        String fydm = (String)session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        if(file.isEmpty()){
+            return "上传失败，请选择文件";
+        }
+        String fileName = file.getOriginalFilename();
+        Date date = new Date();
+        String dataForm = DateUtil.format(date,DateUtil.shortFormat);
+        String filePath = "D:/Upload/Files/"+dataForm+"/";
+        String common = String.valueOf(System.currentTimeMillis());
+        String destName = filePath+common+fileName.substring(fileName.lastIndexOf("."));
+        String suffix = fileName.substring(fileName.lastIndexOf("."));
+        String weblocation = "Files/"+dataForm+"/"+common+suffix;
+        File f = new File(filePath);
+        if(!f.exists()){
+            f.mkdirs();
+        }
+        File dest = new File(destName);
+        try {
+            file.transferTo(dest);
+            if(fileName.endsWith(".mp4")){
+                wjbDao.save(new Wjb(fileName,weblocation,date,"video",Integer.parseInt(lx)));
+            }else {
+                String htmlName = filePath+common+suffix;
+                String imagepath = filePath+"/images/";
+                String str = WordFileUtil.readWord(dest,htmlName,imagepath);
+                if(str.equals("success")){
+                    Wjb wjb = new Wjb(fileName,weblocation,date,"image",Integer.parseInt(lx));
+                    wjbDao.save(wjb);
+                }else {
+                    return str;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "上传成功";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "ImageDownload",method = RequestMethod.GET)
+    public String ImageDownload(String url,Integer lx, HttpServletResponse response,HttpSession session){
+        String fydm = (String) session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        logger.info("image url is :"+url);
+        url = url.replaceAll("data:image/png;base64,","");
+        //base64解码
+        byte[] imageByte = null;
+        BASE64Decoder decoder = new BASE64Decoder();
+        try {
+            imageByte = decoder.decodeBuffer(url);
+            for (int i=0;i<imageByte.length;i++){
+                if(imageByte[i]<0){
+                    imageByte[i] += 256;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "文件二进制流转码失败！";
+        }
+        Date date = new Date();
+        String dataForm = DateUtil.format(date,DateUtil.shortFormat);
+        String filePath = "D:/上传文件/images/"+dataForm+"/";
+        File f = new File(filePath);
+        if(!f.exists()){
+            f.mkdirs();
+        }
+        String fileUrl = filePath+System.currentTimeMillis()+".png";
+        File file = new File(fileUrl);
+        try {
+            file.createNewFile();
+            OutputStream outputStream = new FileOutputStream(file);
+            //二进制流转为file
+            outputStream.write(imageByte);
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "关闭文件流失败！";
+        }
+        WelcomeTxt welcomeTxt = new WelcomeTxt(fileUrl,lx);
+        welcomeTxtDao.save(welcomeTxt);
+        return "保存模板成功！";
+    }
+
+    /**
+     * 用于大屏显示公告和欢迎词
+     * 用于需要投屏的大屏的内容显示
+     * @param modelMap
+     * @return
+     */
+//    @RequestMapping(value = "showggList")
+//    public String NavToScreen(HttpServletRequest request,
+//                              @RequestParam int[] arr,
+//                              ModelMap modelMap){
+//        DynamicDataSource.router("50");
+//        String fydm = navDao.findDqfy();
+//        String lb = request.getParameter("lb");
+//        Integer nrlb = 0;
+//        if (lb!=null){
+//            nrlb = Integer.valueOf(request.getParameter("lb"));
+//        }
+//        Screen screen = adminService.getScreen(0);
+//        if(screen.getNrlb()!=null && screen.getNrlb() != nrlb){
+//            screen.setNrlb(nrlb);
+//            adminService.UpdateScreenLb(screen);
+//        }
+//        nrlb = screen.getNrlb();
+//        modelMap.addAttribute("lb",nrlb);
+//        if(nrlb==1){
+//            //获得当前需要显示的图片信息
+//            String path = welcomeTxtDao.getByMaxBh();
+//            String str = Image2Base64.getImageStr(path);
+//            str = "data:image/png;base64,"+str;
+//            modelMap.addAttribute("hyc",str);
+//        }else {
+//            Map<Integer,List<Ggb>> ggMap = ggService.getGgnrList();
+//            Map<Integer,List<Ggb>> map = new HashMap<>();
+//            if(arr ==null||arr.length==0){
+//                //如果没有选中状态 则取出数据库当前状态
+//                arr = ArrayUtil.getSelectedArr(screen.getSelectarr());
+//            }else{
+//                //如果有选中 那么更新数据库信息
+//                screen.setSelectarr(ArrayUtil.TransArr(arr));
+//                adminService.UpdateScreenLb(screen);
+//            }
+//            modelMap.addAttribute("sxbzxr",0);
+//            List<String> Bcwz = new ArrayList<>();
+//            List<String> docStr = new ArrayList<>();
+//            for(int i =0;i<arr.length;i++){
+//                if(arr[i]<9){
+//                    if(ggMap.containsKey(arr[i])){
+//                        map.put(arr[i],ggMap.get(arr[i]));
+//                    }
+//                } else if (arr[i]==9){
+//                    //如果选中的是失信被执行人
+//                    FYEnum fy = FYEnum.getFyByFydm(fydm);
+//                    //切换至集中库
+//                    DynamicDataSource.router(fydm);
+//                    List<XycjSxbzxr> zrlList = screenService.getSxbzxr(fy.getName(),"自然人");
+//                    for (XycjSxbzxr sxbzxr: zrlList){
+//                        if(sxbzxr.getZjhm()!=null&&sxbzxr.getZjhm()!=""
+//                                &&sxbzxr.getZjhm().length()>=18){
+//                            String sfzh = sxbzxr.getZjhm().substring(0,10)+"****"
+//                                    +sxbzxr.getZjhm().substring(14,18);
+//                            sxbzxr.setZjhm(sfzh);
+//                        }
+//                    }
+//                    //如果是法人
+//                    List<XycjSxbzxr> zzjgList = screenService.getSxbzxr(fy.getName(),"法人");
+//                    for (XycjSxbzxr sxbzxr: zzjgList){
+//                        if(sxbzxr.getZzjgdm()!=null&&sxbzxr.getZzjgdm()!=""
+//                                &&sxbzxr.getZzjgdm().length()>=18){
+//                            String zzjgdm = sxbzxr.getZzjgdm().substring(0,10)+"****"
+//                                    +sxbzxr.getZzjgdm().substring(14,18);
+//                            sxbzxr.setZzjgdm(zzjgdm);
+//                        }
+//                    }
+//                    modelMap.addAttribute("zrlList",zrlList);
+//                    modelMap.addAttribute("zzjgList",zzjgList);
+//                    modelMap.addAttribute("sxbzxr",1);
+//                }else {
+//                    DynamicDataSource.router("50");
+//                    List<Wjb> list = wjbDao.findBcwzList();
+//                    for (Wjb wj:list){
+//                        if(wj.getType().equals("video")){
+//                            Bcwz.add(wj.getBcwz());
+//                        }else {
+//                            docStr.add(wj.getDocstr());
+//                        }
+//                    }
+//                }
+//            }
+//            modelMap.addAttribute("video_src",Bcwz);
+//            modelMap.addAttribute("docstr",docStr);
+//            modelMap.addAttribute("gglist",map);
+//            modelMap.addAttribute("fy",FYEnum.getNameByFYDM(fydm));
+//        }
+//        return "screen/ShowGg";
+//    }
+
+    @RequestMapping(value = "show")
+    public String Show(ModelMap modelMap){
+        Screen screen = adminService.getScreen(0);
+        modelMap.addAttribute("nrlb", screen.getNrlb());
+        return "screen/show";
+    }
+}

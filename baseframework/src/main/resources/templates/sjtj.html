@@ -1,0 +1,402 @@
+<div class="clearfix" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="detail">
+        <form id="mysearch">
+            <div class="clearfix">
+                <div class="row" style="margin: 5px;">
+                    <select hidden="hidden" id="jafs_map">
+                        <option th:each="item:${jafs}" th:value="${item.key}" th:text="${item.value}"></option>
+                    </select>
+                    <div class="col-sm-3 form-inline">
+                        <label class="input-group-text">审判庭：</label>
+                        <select name="spt" class="form-control" aria-describedby="basic-addon3" style="width: 150px;">
+                            <option value="">请选择审判庭</option>
+                            <option th:each="item:${spt}" th:text="${item.dmms}" th:value="${item.dmbh}"></option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 form-inline">
+                        <label class="input-group-text">案件性质：</label>
+                        <select name="ajxz" id="ajxz" class="form-control" aria-describedby="basic-addon3"
+                                style="width: 150px;">
+                            <option value="">请选择案件性质</option>
+                            <option th:each="item:${ajxz}" th:text="${item.dmms}"
+                                    th:value="${item.dmbh        }"></option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 form-inline">
+                        <label class="input-group-text">结案方式：</label>
+                        <select name="jafs" id="jafs" class="form-control" aria-describedby="basic-addon3"
+                                style="width: 150px;">
+                            <option value="">请选择结案方式</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 form-inline">
+                        <label class="input-group-text">承办人：</label>
+                        <input type="text" name="cbr" class="form-control" aria-describedby="basic-addon3"
+                               placeholder="请输入承办人" style="width: 150px;">
+                    </div>
+                </div>
+
+                <div class="row" style="margin: 5px;">
+                    <div class="col-sm-6 form-inline">
+                        <label class="input-group-text">时间范围：</label>
+                        <input type="text" name="kssj" class="form-control" aria-describedby="basic-addon3"
+                               style="width: 150px;height: 30px;">
+                        <label class="input-group-text">至 </label>
+                        <input type="text" name="jssj" class="form-control" aria-describedby="basic-addon3"
+                               style="width: 150px;height: 30px;">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5"></div>
+                    <div class="col-sm-3">
+                        <button type="button" class="btn btn-primary" id="searchbtn">
+                            <span class="oi oi-magnifying-glass"><span class="navPadding">搜索</span></span></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="clearfix">
+        <div class="leftdiv">
+            <div style="margin-left: 30px;margin-bottom: 30px">
+                <span style="font-weight: bold;">|</span>
+                <span style="font-size: 14px;">预约类别统计</span>
+            </div>
+            <!--用于放置预约统计图表插件-->
+            <div id="chart_yy" class="xq_nav" style="width:70%;height: 260px;"></div>
+            <div style="margin-left: 30px;">
+                <span style="font-weight: bold;">|</span>
+                <span style="font-size: 14px;">预约数量统计</span>
+            </div>
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group mr-2" role="group" aria-label="Second group">
+                    <button type="button" class="btn btn-secondary" style="margin-left: 70px;" id="updateYYTable">
+                        <span class="oi oi-loop"><span class="navPadding">刷新</span></span></button>
+                    <button type="button" class="btn btn-secondary" id="printYYTable">
+                        <span class="oi oi-print"><span class="navPadding">打印</span></span></button>
+                    <button type="button" class="btn btn-secondary" id="exportYYTable">
+                        <span class="oi oi-share-boxed"><span class="navPadding">导出</span></span></button>
+                </div>
+            </div>
+
+            <!--表格绘制-->
+            <table id="t_yy"></table>
+        </div>
+
+        <div class="rightdiv">
+            <div style="margin-left: 30px;margin-bottom: 30px;">
+                <span style="font-weight: bold;">|</span>
+                <span style="font-size: 14px;">公告类别统计</span>
+            </div>
+            <!--用于放置公告统计图表插件-->
+            <div id="chart_gg" class="xq_nav" style="width:70%;height: 260px;"></div>
+            <div style="margin-left: 30px;">
+                <span style="font-weight: bold;">|</span>
+                <span style="font-size: 14px;">公告数量统计</span>
+            </div>
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group mr-2" role="group" aria-label="Second group">
+                    <button type="button" class="btn btn-secondary" style="margin-left: 70px;" id="updateGGTable">
+                        <span class="oi oi-loop"><span class="navPadding">刷新</span></span></button>
+                    <button type="button" class="btn btn-secondary" id="printGGTable">
+                        <span class="oi oi-print"><span class="navPadding">打印</span></span></button>
+                    <button type="button" class="btn btn-secondary" id="exportGGTable">
+                        <span class="oi oi-share-boxed"><span class="navPadding">导出</span></span></button>
+                </div>
+            </div>
+            <!--表格绘制-->
+            <table id="t_gg">
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .combo {
+        border-color: #cccccc;
+        height: 30px;
+        border-radius: 4px;
+    }
+</style>
+
+<script>
+    $(function () {
+        var pagewidth = document.documentElement.clientWidth - 260;
+        var tablewidth = pagewidth * 0.5;
+        //初始化表格
+        initYYTable(tablewidth);
+        initGGTable(tablewidth);
+        initChart();
+
+        $('input[name="kssj"]').datebox({
+            panelWidth: 300,
+            panelHeight: 210,
+            editable: true
+        });
+        $('input[name="jssj"]').datebox({
+            panelWidth: 300,
+            panelHeight: 210,
+            editable: true
+        });
+
+        /*刷新按钮*/
+        $('#updateYYTable').click(function () {
+            $('#t_yycx').datagrid('reload');
+        });
+
+        $('#updateGGTable').click(function () {
+            $('#t_yycx').datagrid('reload');
+        });
+
+        /*打印表格*/
+        $('#printYYTable').click(function () {
+
+        });
+
+        $('#printGGTable').click(function () {
+
+        });
+        /*导出表格*/
+        $('#exportYYTable').click(function () {
+
+        });
+        $('#exportGGTable').click(function () {
+
+        });
+
+        $("#ajxz").change(function () {
+            var ajxz = $("#ajxz").val();
+            var obj = $('#jafs_map').get(0);
+            for (var i = 0; i < obj.options.length; i++) {
+                var value = obj.options[i].value;
+                if (value == ajxz) {
+                    var arr = eval(obj.options[i].text);
+                    $('#jafs').empty();
+                    $('#jafs').append('<option value="">请选择结案方式</option>');
+                    for (var j = 0; j < arr.length; j++) {
+                        $('#jafs').append('<option value="' + arr[j].dmbh + '">'
+                            + arr[j].dmms + '</option>');
+                    }
+                    return false;
+                }
+            }
+        });
+
+        /*搜索按钮*/
+        $('#searchbtn').click(function () {
+            $('#t_yy').datagrid('load', serializeForm($('#mysearch')));
+            $('#t_gg').datagrid('load', serializeForm($('#mysearch')));
+        });
+
+    });
+
+
+    function initYYTable(tablewidth) {
+        $('#t_yy').datagrid({
+            idField: "yyId",
+            nowrap: false,
+            width: tablewidth,
+            height: 'auto',
+            striped: true,
+            fitColumns: true,
+            scrollbarSize: 0,
+            url: "yyTJ",
+            loadMsg: "数据正在加载.....",
+            pagination: true,
+            rownumbers: true,
+            pageList: [5, 10, 15, 20, 50],
+            pageSize: 10,
+            columns: [
+                [
+                    {field: 'jfr', title: '操作人', width: tablewidth * 0.35, align: "center"},
+                    {field: 'yysj', title: '预约时间', width: tablewidth * 0.3, align: "center"},
+                    {field: 'count', title: '预约数量', width: tablewidth * 0.3, align: "center"},
+                ]
+            ]
+        });
+    }
+
+    function initGGTable(tablewidth) {
+        $('#t_gg').datagrid({
+            idField: "yyId",
+            width: tablewidth,
+            nowrap: false,
+            height: 'auto',
+            striped: true,
+            scrollbarSize: 0,
+            url: "ggTJ",
+            rownumbers: true,
+            loadMsg: "数据正在加载.....",
+            pagination: true,
+            pageList: [5, 10, 15, 20, 50],
+            pageSize: 10,
+            columns: [
+                [
+                    {field: 'fbr', title: '发布人', width: tablewidth * 0.2, align: "center"},
+                    {field: 'fbsj', title: '发布时间', width: tablewidth * 0.25, align: "center"},
+                    {field: 'gglx', title: '公告类型', width: tablewidth * 0.25, align: "center"},
+                    {field: 'count', title: '公告数量', width: tablewidth * 0.18, align: "center"},
+                ]
+            ]
+        });
+    }
+
+    function initChart() {
+        $.ajax({
+            url: "/yyChart",
+            method: "post",
+            success: function (result) {
+                var re = JSON.parse(result);
+//                console.log(re);
+                var max = maxval(re);
+                console.log(max);
+                var yyz, yywc, yygq = 4, yyzf = 5;
+                $.each(re, function (idx, obj) {
+                    if (obj.yyzt == 0) {
+//                       yyz = obj.num;
+                        yyz = 2;
+                    } else if (obj.yyzt == 1) {
+                        yywc = 3;
+                    } else if (obj.yyzt == 2) {
+                        yygq = 4;
+                    } else if (obj.yyzt == 3) {
+                        yyzf = 5;
+                    }
+                });
+                var chart1 = echarts.init(document.getElementById('chart_yy'));
+                var option1 = {
+                    angleAxis: {
+                        startAngle: 270,
+                        max: max > 5 ? max + 1 : 6,
+                        z: 10
+                    },
+                    radiusAxis: {
+                        type: 'category'
+                    },
+                    polar: {},
+                    series: [{
+                        type: 'bar',
+                        data: [yyz, 0, 0, 0],
+                        coordinateSystem: 'polar',
+                        name: '预约中',
+                        stack: 'a'
+                    }, {
+                        type: 'bar',
+                        data: [0, yywc, 0, 0],
+                        coordinateSystem: 'polar',
+                        name: '预约完成',
+                        stack: 'a'
+                    }, {
+                        type: 'bar',
+                        data: [0, 0, yygq, 0],
+                        coordinateSystem: 'polar',
+                        name: '预约过期',
+                        stack: 'a'
+                    }, {
+                        type: 'bar',
+                        data: [0, 0, 0, yyzf],
+                        coordinateSystem: 'polar',
+                        name: '预约作废',
+                        stack: 'a'
+                    }],
+                    legend: {
+                        show: true,
+                        orient: 'vertical',
+                        x: 'left',
+                        data: ['预约中', '预约完成', '预约过期', '预约作废']
+                    },
+                    animation: false
+                };
+                chart1.setOption(option1);
+            }
+        });
+
+        $.ajax({
+            url: "/ggChart",
+            method: "post",
+            success: function (result) {
+                var re = JSON.parse(result);
+                var sdqs = 2, ktpq = 3, zx = 4, sxbzx = 5, sdcd = 3, zdy = 1;
+                var max = maxval(re);
+                console.log(max);
+                $.each(re, function (idx, obj) {
+                    if (obj.gglx == 1) {
+                        sdqs = 2;
+                    } else if (obj.gglx == 2) {
+                        ktpq = 3;
+                    } else if (obj.gglx == 3) {
+                        zx = 4;
+                    } else if (obj.gglx == 4) {
+                        sxbzx = 5;
+                    } else if (obj.gglx == 5) {
+                        sdcd = 4;
+                    } else if (obj.gglx == 6) {
+                        zdy = 2;
+                    }
+                });
+                var chart2 = echarts.init(document.getElementById('chart_gg'));
+                var option2 = {
+                    polar: {},
+                    angleAxis: {
+                        type: 'category',
+                        data: [sdqs, ktpq, zx, sxbzx, sdcd, zdy],
+                        z: 10
+                    },
+                    radiusAxis: {
+                        min: 0,
+                        max: max > 5 ? max : 5,
+                        z: 10
+                    },
+                    legend: {
+                        show: true,
+                        orient: 'vertical',
+                        x: 'left',
+                        data: ['送达起诉公告', '开庭排期公告', '执行公告', '失信被执行人公告', '送达裁定书公告', '自定义公告']
+                    },
+                    series: [{
+                        type: 'pie',
+                        roseType: 'area',
+                        label: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data: [{value: sdqs, name: '送达起诉公告'},
+                            {value: ktpq, name: '开庭排期公告'},
+                            {value: zx, name: '执行公告'},
+                            {value: sxbzx, name: '失信被执行人公告'},
+                            {value: sdcd, name: '送达裁定书公告'},
+                            {value: zdy, name: '自定义公告'}]
+                    }]
+                }
+
+                chart2.setOption(option2);
+            }
+        })
+    }
+
+    function maxval(array) {
+        var max = 0;
+        $.each(array, function (idx, obj) {
+            if (obj.num > max) {
+                max = obj.num;
+            } else if (obj.num > max) {
+                max = obj.num;
+            } else if (obj.num > max) {
+                max = obj.num;
+            } else if (obj.num > max) {
+                max = obj.num;
+            } else if (obj.num > max) {
+                max = obj.num;
+            } else if (obj.num > max) {
+                max = obj.num;
+            }
+        });
+        return max;
+    }
+</script>

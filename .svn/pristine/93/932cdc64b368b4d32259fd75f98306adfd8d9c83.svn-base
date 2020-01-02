@@ -1,0 +1,219 @@
+<div id="screen" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div id="fy" th:text="${fy}" style="display: none;"></div>
+    <div id="lb" th:text="${lb}" style="display: none;"></div>
+    <div th:if="${lb}!=1">
+        <div class="clearfix">
+            <video class="video" style="display: none;"
+                   th:each="item,status:${video_src}"
+                   th:data-id="${status.index}" preload="auto">
+                <source th:src="${item}">
+            </video>
+        </div>
+        <div id="gglist">
+            <div th:each="item:${gglist}" th:data-id="${item.key}" style="display: none;">
+                <span th:each="it:${item.value}" th:text="${it.ggnr}" th:data-url="${it.fbsj}"></span>
+            </div>
+            <div id="sxbzxr" style="margin: 0 auto;width: 75%;display: none;" th:if="${sxbzxr}==1">
+                <b style="float:left;">
+                    <label class="fixedtitle">失信被执行人（自然人）公示</label>
+                    <table id="sxbzxrList">
+                        <tr th:each="item:${zrlList}">
+                            <td th:text="${item.bzxrmc}"></td>
+                            <td th:text="${item.zjhm}"></td>
+                        </tr>
+                    </table>
+                </b>
+                <b style="float: right;">
+                    <label class="fixedtitle">失信被执行人（法人）公示</label>
+                    <table id="zzjgList">
+                        <tr th:each="item:${zzjgList}">
+                            <td th:text="${item.bzxrmc}"></td>
+                            <td th:text="${item.zzjgdm}"></td>
+                        </tr>
+                    </table>
+                </b>
+            </div>
+        </div>
+    </div>
+    <!--如果是欢迎词-->
+    <div th:if="${lb}==1">
+        <image id="hyc" th:src="${hyc}"></image>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: black;
+        color: red;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    .ggnr {
+        padding: 30px;
+        line-height: 70px;
+        display: block;
+        font-size: 36px;
+    }
+
+    label {
+        padding-top: 30px;
+        display: block;
+        text-align: center;
+        position: relative;
+        z-index: 1000;
+        background: black;
+        font-size: 60px;
+    }
+
+    .fixedtitle {
+        background: #000;
+        position: relative;
+        z-index: 1000;
+        padding-top: 30px;
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+        font-size: 24px;
+        padding-bottom: 20px;
+    }
+
+    table td {
+        height: 30px;
+    }
+</style>
+<script src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../static/js/my/common.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //定义速度
+        var speed = 10.0;
+        var margin = 0;
+        var time = null;
+        windowHeight = document.body.clientHeight;
+        $("#screen").css("min-height", windowHeight);
+        var lb = $('#lb').text();
+
+        if (lb !=1) {
+            var obj = $('#gglist');
+            obj.find('div').each(function (k, v) {
+                var id = $(v)[0].id;
+                if (id == 'sxbzxr') {
+                } else {
+                    var html = '';
+                    html += '<label>'
+                        + Gglx(parseInt($(v).data('id'))) + '</label><span class="ggnr">';
+                    $(v).find('span').each(function (k, v) {
+                        html += "<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + $(v).text() + "</span><br>" +
+                            "<span style='float: right;margin-top: -20px;'>" + $('#fy').text() + "<br>" + $(v).data('url').substr(0, 10) + "</span><br><br>";
+                    });
+                    html += '</span>';
+                    $(v).html(html);
+                }
+            });
+
+            // obj.append($('#sxbzxr').html())
+            var size = $('.video').length;
+            if(size!=0){
+                $('.video:first').css('display','block');
+                $('.video')[0].play();
+                $('.video').bind('ended',function () {
+                    $(this).css('display','none');
+                    var k = $(this).data('id');
+                    if (k != size - 1) {
+                        $($('.video')[k + 1]).css('display', 'block');
+                        $('.video')[k + 1].currentTime = 0;
+                        $('.video')[k + 1].play();
+                    } else {
+                        var _obj = obj.find('div');
+                        if(_obj.length!=0){
+                            _obj.each(function (k, v) {
+                                $(v).css('display', 'block');
+                                return false;
+                            });
+                            time = setInterval(move, 1000);
+                        }else {
+                            $(this).css('display','block');
+                            this.currentTime = 0;
+                            this.play();
+                        }
+                    }
+                });
+            }else {
+                obj.find('div').each(function (k, v) {
+                    $(v).css('display', 'block');
+                    return false;
+                });
+                time = setInterval(move, 1000);
+            }
+        } else {
+            $('#hyc').css('height', windowHeight);
+            $('#hyc').css('width', document.documentElement.clientWidth);
+        }
+
+        function move() {
+            var index = find_display();
+            var parent = $('#gglist').find('div');
+            var id = $($(parent[index])[0]).attr('id');
+            var obj = $(parent[index]).find('.ggnr');
+            var height = null;
+            if (id == 'sxbzxr') {
+                var height1 = $(parent[index]).find("#sxbzxrList")[0].clientHeight;
+                var height2 = $(parent[index]).find("#zzjgList")[0].clientHeight;
+                if (height1 > height2) {
+                    height = height1;
+                } else {
+                    height = height2;
+                }
+            } else {
+                height = obj.context.clientHeight
+            }
+            if ( margin < height) {
+                margin += speed;
+                if (id == 'sxbzxr') {
+                    $(parent[index]).find("#sxbzxrList").css('margin-top', -1 * margin + "px");
+                    $(parent[index]).find("#zzjgList").css('margin-top', -1 * margin + "px");
+                } else {
+                    obj.css('margin-top', -1 * margin + "px");
+                }
+            } else {
+                $(parent[index]).css('display', 'none');
+                if(size!=0){
+                    $('.video:first').css('display','block');
+                    $('.video')[0].currentTime=0;
+                    $('.video')[0].play();
+                    clearInterval(time);
+                }else {
+                    setTimeout(2000);
+                    var i = (index + 1) % $('#gglist').find('div').length;
+                    $(parent[i]).css('display', 'block');
+                    margin = 0;
+                }
+            }
+        }
+    });
+
+    function find_display() {
+        var index = null;
+        $('#gglist').find('div').each(function (k, v) {
+            var display = $(v).css('display');
+            if (display == 'block') {
+                index = k;
+                return false;
+            }
+        });
+        return index;
+    }
+
+    function checkVideo() {
+        var index = null;
+        $('.video').each(function (k,v) {
+            if($(v).css('display')=='block'){
+                index = k;
+                return false;
+            }
+        });
+        return index;
+    }
+
+</script>

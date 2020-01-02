@@ -1,0 +1,164 @@
+<div class="xq_nav">
+    <span style="font-weight: bold;">|</span>
+    <span>公告管理</span>
+</div>
+<div class="xq_nav">
+    <table id="gggl"></table>
+</div>
+<div class="xq_nav">
+    <span style="font-weight: bold;">|</span>
+    <span>功能管理</span>
+</div>
+<div class="xq_nav">
+    <table id="gnlb"></table>
+</div>
+
+<script>
+    $(function () {
+        var tablewidth = document.documentElement.clientWidth - 260;
+        $('#gggl').datagrid({
+            nowrap: false,
+            width: tablewidth,
+            height: 'auto',
+            striped: true,
+            singleSelect: true,
+            scrollbarSize: 0,
+            url: "ControlGgBf",
+            loadMsg: "数据正在加载.....",
+            pagination: true,
+            pageList: [5, 10, 15, 20, 50],
+            pageSize: 10,
+            columns: [
+                [
+                    {field: 'gglx', title: '公告类型', width: tablewidth * 0.2, align: 'center'},
+                    {field: 'ah', title: '案号', width: tablewidth * 0.2, align: 'center'},
+                    {field:'ajmc',title:'案件名称',width:tablewidth*0.25,align:'center'},
+                    {field:'fbr',title:'发布人',width:tablewidth*0.15,align:'center'},
+                    {field:'id',title:'操作',width:tablewidth*0.16,align:'center',
+                    formatter:function (value,record) {
+                        if(value=='0'){
+                            return '<img style="width: 30px" data-url="'+record.id+'" class="icon1" onclick="changebfgn(this)" ' +
+                                'src="../../static/image/off.png"/>';
+                        }else {
+                            return '<img style="width: 30px" data-url="'+record.id+'" class="icon1" onclick="changebfgn(this)" ' +
+                                'src="../../static/image/on.png"/>';
+                        }
+                    }}
+                ]
+            ]
+        })
+        //功能列表
+        $('#gnlb').datagrid({
+            nowrap: false,
+            width: tablewidth,
+            height: 'auto',
+            striped: true,
+            scrollbarSize: 0,
+            singleSelect: true,
+            url: "gnlb",
+            loadMsg: "数据正在加载.....",
+            pagination: true,
+            pageList: [5, 10, 15, 20, 50],
+            pageSize: 10,
+            columns: [
+                [
+                    {field: 'gnms', title: '功能', width: tablewidth * 0.31, align: 'center'},
+                    {
+                        field: 'status', title: '执行状态', width: tablewidth * 0.65,
+                        align: 'left',
+                        formatter: function (value,record) {
+                            if(value=='0'){
+                                return '<img style="width: 30px" data-url="'+record.bh+'" class="icon" ' +
+                                    'onclick="changesrc(this)" ' +
+                                    'src="../../static/image/off.png"/>';
+                            }else {
+                                return '<img style="width: 30px;" data-url="'+record.bh+'" ' +
+                                    'class="icon" onclick="changesrc(this)"'  +
+                                    ' src="../../static/image/on.png"/>'
+                            }
+                        }
+                    }
+                ]
+            ]
+        })
+    });
+
+    /**
+     * 功能表里面的两项应当是互斥项
+     * @param obj
+     */
+    function changesrc(obj) {
+        var src = $(obj)[0].src;
+        var bh = $(obj).data('url');
+        var another = findPage().find('.icon');
+        if(src =='http://130.4.1.49:8081/static/image/on.png'){
+            $(obj)[0].src = '../../static/image/off.png';
+        }else {
+            $(obj)[0].src = '../../static/image/on.png';
+            updatezxzt(bh,1);
+            if(bh=='1'){
+                if(another[1].src == 'http://130.4.1.49:8081/image/on.png'){
+                    another[1].src = '../../static/image/off.png';
+                    updatezxzt(2,0);
+                }
+            }else{
+                if(another[0].src == 'http://130.4.1.49:8081/image/on.png'){
+                    another[0].src = '../../static/image/off.png';
+                    updatezxzt(1,0);
+                }
+            }
+        }
+    }
+
+    /**
+     * 公告播放控制表
+     * @param obj
+     */
+    function changebfgn(obj) {
+        var src = $(obj)[0].src;
+        var bh = $(obj).data('url');
+        if(src =='http://130.4.1.49:8081/static/image/on.png'){
+            $(obj)[0].src = '../../static/image/off.png';
+            updatebfzt(bh,1);
+        }else {
+            $(obj)[0].src = '../../static/image/on.png';
+            updatebfzt(bh,0);
+        }
+    }
+
+    function updatezxzt(bh,zt) {
+        $.ajax({
+            url:'UpdateGnxx',
+            method:'post',
+            data:{
+                "bh":bh,
+                "zt":zt
+            },
+            success:function () {
+                $.messager.show({
+                    title:'提示信息',
+                    msg:'功能列表已更新'
+                });
+                $('#gggl').datagrid('reload');
+            }
+        })
+    }
+
+    function updatebfzt(bh,zt) {
+        $.ajax({
+            url:'UpdateBfStatus',
+            method:'post',
+            data:{
+                "bh":parseInt(bh),
+                "zt":zt
+            },
+            success:function () {
+                $.messager.show({
+                    title:'提示信息',
+                    msg:'公告播放控制信息已更新'
+                });
+                $('#gggl').datagrid('reload');
+            }
+        })
+    }
+</script>

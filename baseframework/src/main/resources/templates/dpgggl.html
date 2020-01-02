@@ -1,0 +1,70 @@
+<div class="detail">
+    <div class="row">
+        <div class="col-sm-5 form-inline">
+            <label style="float:left;">案号:</label>
+            <input style="float:left;" placeholder="请输入案号" class="form-control">
+            <button type="button" class="btn btn-primary" id="searchBtn" style="width: 100px;margin: 5px;float: left;">
+                <span class="icon-search"><span class="navPadding">搜索</span></span></button>
+        </div>
+    </div>
+</div>
+
+<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-left: 25%">
+    <div class="btn-group mr-2" role="group" aria-label="Second group">
+        <button type="button" class="btn btn-secondary" id="addRecord">
+            <span class="icon-plus"><span class="navPadding">新增</span></span></button>
+        <button type="button" class="btn btn-secondary" id="editRecord">
+            <span class="icon-pencil"><span class="navPadding">编辑</span></span></button>
+        <button type="button" class="btn btn-secondary" id="startRecord">
+            <span class="icon-forward"><span class="navPadding">启用</span></span></button>
+        <button type="button" class="btn btn-secondary" id="stopRecord">
+            <span class="icon-ban-circle"><span class="navPadding">停用</span></span></button>
+    </div>
+    <div class="btn-group mr-2" role="group" aria-label="Second group">
+        <button type="button" class="btn btn-secondary" id="updateTable">
+            <span class="icon-refresh"><span class="navPadding">刷新</span></span></button>
+        <button type="button" class="btn btn-secondary" id="deletTable">
+            <span class="icon-trash"><span class="navPadding">删除</span></span></button>
+    </div>
+</div>
+
+<!--表格绘制-->
+<div class="clearfix" style="margin-left: 10px;">
+    <table id="gglb"></table>
+</div>
+
+
+<script>
+    $(function () {
+        initialTable();
+    })
+
+    function initialTable() {
+        tablewidth = document.documentElement.clientWidth-210;
+        $('#gglb').datagrid({
+            idField: "gglbId",
+            width: tablewidth,
+            nowrap: false,
+            height: 'auto',
+            striped: true,
+            scrollbarSize: 0,
+            url: "ggTable",
+            loadMsg: "数据正在加载.....",
+            pagination: true,
+            pageList: [5, 10, 15, 20, 50],
+            pageSize: 10,
+            columns: [
+                [
+                    {field: 'id', title: '序号', width:tablewidth*0.06 },
+                    {field: 'ggmc', title: '公告名称', width: tablewidth*0.1, align: "center"},
+                    {field: 'status', title: '公告状态', width: tablewidth*0.1, align: "center"},
+                    {field: 'gglx', title: '公告类型', width: tablewidth*0.1, align: "center"},
+                    {field: 'bffs', title: '播放方式', width: tablewidth*0.1, align: "center"},
+                    {field: 'bfkssj', title: '播放开始时间', width: tablewidth*0.1, align: "center"},
+                    {field: 'bfkssd', title: '播放开始时段', width: tablewidth*0.2, align: "center"},
+                    {field: 'bfjssj', title: '播放截止时段', width: tablewidth*0.2, align: "center"}
+                ]
+            ]
+        });
+    }
+</script>

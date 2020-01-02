@@ -1,0 +1,340 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <div style="width:60%;float: left;">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 15px;">案件详情</span>
+        </div>
+
+        <div class="xq_container">
+            <div><span>案号:</span><span id="ah" th:text="${ajxq.ah}"></span></div>
+            <div><span>审判长:</span><span th:text="${ajxq.spz}"></span></div>
+            <div><span>案件名称:</span><span id="ajmc" th:text="${ajxq.ajmc}"></span></div>
+            <div><span>审判员:</span><span th:text="${ajxq.spy}"></span></div>
+            <div><span>法官助理:</span><span th:text="${ajxq.fgzl}"></span></div>
+            <div><span>书记员:</span><span th:text="${ajxq.sjy}"></span></div>
+            <div><span>适用程序:</span><span th:text="${ajxq.sycx}"></span></div>
+            <div><span>部门:</span><span ></span></div>
+            <div><span>立案日期:</span><span th:text="${ajxq.larq}"></span></div>
+            <div><span>剩余审理天数:</span><span th:text="${ajxq.syslts}"></span></div>
+            <div><span>当事人:</span><span th:text="${ajxq.dsr}"></span></div>
+            <div><span>关联联系人:</span><span th:text="${ajxq.gllxr}"></span></div>
+        </div>
+
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="padding-left: 30%">
+            <div class="btn-group mr-2 navbar" role="group" aria-label="Second group">
+                <button type="button" class="btn btn-secondary" id="addYy">
+                    <span class="icon-plus"><span class="navPadding">新增预约</span></span></button>
+                <button type="button" class="btn btn-secondary dropdown" id="addGg">
+                    <span class="icon-edit dropdown-toggle" data-toggle="dropdown">
+                        <span class="navPadding">新增公告</span>
+                        <b class="caret"></b>
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li value="1">送达起诉状副本及开庭传票公告</li>
+                        <li value="2">开庭排期公告</li>
+                        <li value="5">送达裁定书公告</li>
+                    </ul>
+                </button>
+                <button type="button" class="btn btn-secondary" id="exitBtn">
+                    <span class="icon-off"><span class="navPadding">退出</span></span></button>
+            </div>
+        </div>
+    </div>
+
+    <div style="float:left;margin-left: 20px;">
+        <div class="xq">
+            <span class="icon-bullhorn">
+                <span class="navPadding">本案所有预约</span>
+            </span>
+            <select id="yyzt">
+                <option value="5">全部</option>
+                <option value="0">未预约</option>
+                <option value="1">预约中</option>
+                <option value="2">完成</option>
+                <option value="4">作废</option>
+                <option value="3">过期</option>
+            </select>
+            <table id="ajyy"></table>
+        </div>
+        <div class="xq">
+            <span class="icon-bullhorn">
+                <span class="navPadding">本案所有公告</span>
+            </span>
+            <select id="ggzt">
+                <option value="5">全部</option>
+                <option value="0">未发布</option>
+                <option value="1">正在发布</option>
+                <option value="3">作废</option>
+                <option value="4">过期</option>
+            </select>
+            <table id="ajgg"></table>
+        </div>
+    </div>
+</div>
+<!--案件绑定预约窗口-->
+<form id="yyDialog" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="clearfix" style="overflow: auto;">
+    <table class="yyTab">
+        <tr>
+            <td class="format"><span class="import">*</span>案号:</td>
+            <td><input type="text" name="ah" th:value="${ajxq.ah}" readonly="readonly"/></td>
+        </tr>
+        <tr>
+            <td class="format"><span class="import">*</span>案件名称:</td>
+            <td><input type="text" name="ajmc" th:value="${ajxq.ajmc}" readonly="readonly"/></td>
+        </tr>
+        <tr>
+            <td class="format">本案当事人:</td>
+            <td>
+                <div>
+                    <input type="checkbox" name="lfr" style="width:15px;height: 15px;float: left;"/>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="format">本案关联人:</td>
+            <td>
+                <button id="addGlr" type="button" style="margin-left: 0px">
+                    <span class="icon-plus"></span>
+                </button>
+                <div id="glr"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="format">预约开始时间:</td>
+            <td><input type="text" name="lfsj"/></td>
+        </tr>
+        <tr>
+            <td class="format">接访地点:</td>
+            <td><input type="text" name="jfdd" placeholder="接访地点"/></td>
+        </tr>
+        <tr>
+            <td class="format">接访部门:</td>
+            <td><input type="text" name="jfbm" value=""/></td>
+        </tr>
+        <tr>
+            <td class="format">接访人:</td>
+            <td><input type="text" name="jfr" th:value="${jfr}"/></td>
+        </tr>
+        <tr>
+            <td class="format">联系方式:</td>
+            <td><input type="text" name="jfrlxfs" value=""/></td>
+        </tr>
+    </table>
+    </div>
+    <button type="reset" id="btn3" class="btn btn-primary TabButton">
+        <span class="icon-remove">
+            <span class="navPadding">重置</span>
+        </span>
+    </button>
+    <button type="button" id="btn4" class="btn btn-primary" style="width: 120px;">
+        <span class="icon-ok">
+            <span class="navPadding">确认</span>
+        </span>
+    </button>
+</form>
+<!--添加案件关联人-->
+<form id="glrDialog">
+    <table class="yyTab">
+        <tr>
+            <td><span>姓名：</span></td>
+            <td><input name="name"/></td>
+        </tr>
+        <tr>
+            <td><span>关联当事人：</span></td>
+            <td><input name="gldsr"/></td>
+        </tr>
+        <tr>
+            <td><span>联系方式：</span></td>
+            <td><input name="lfrlxfs"/></td>
+        </tr>
+        <tr>
+            <td><span>关系：</span></td>
+            <td>
+                <select name="ybagx" style="width: 260px;height: 30px;">
+                    <option value="1">父母</option>
+                    <option value="2">子女</option>
+                    <option value="3">配偶</option>
+                    <option value="4">代理律师</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><span>身份证号</span></td>
+            <td><input name="lfrsfzh"/></td>
+        </tr>
+    </table>
+    <button type="reset" class="btn btn-primary TabButton">
+        <span class="icon-remove">
+            <span class="navPadding">重置</span>
+        </span>
+    </button>
+    <button type="button" id="btn5" class="btn btn-primary" style="width: 120px;">
+        <span class="icon-ok">
+            <span class="navPadding">确认</span>
+        </span>
+    </button>
+</form>
+
+<script>
+    $(function () {
+        var ah =$("#ah").text();
+        var ajmc = $('#ajmc').text();
+        $('#ajyy').datagrid({
+            idField: "ajlbId",
+            width: 400,
+            nowrap: false,
+            height: 'auto',
+            striped: true,
+            scrollbarSize: 0,
+            url: "/ajyy?ah="+ah,
+            loadMsg: "数据正在加载.....",
+            columns: [
+                [
+                    {field: 'lfrxm', title: '被预约人',width:100, align: 'center'},
+                    {field: 'jfdd',title:'房间',width:80,align:'center'},
+                    {field:'lfsjStr',title:'来访时间',width:100,align:'center'},
+                    {field:'status',title:'状态',width:80,align:'center'}
+                ]
+            ]
+        });
+        $('#ajgg').datagrid({
+            idField: "ajlbId",
+            width:400,
+            nowrap: false,
+            height: 'auto',
+            striped: true,
+            scrollbarSize: 0,
+            url: "/ajgg?ah="+ah,
+            loadMsg: "数据正在加载.....",
+            columns: [
+                [
+                    {field: 'gglx',width:120,title:'公告类型',align:'center'},
+                    {field:'fbsj',width:120,title:'发布时间',align:'center'},
+                    {field:'ggzt',width:120,title:'状态',align:'center'}
+                ]
+            ]
+        });
+
+        $('#yyDialog').dialog({
+            modal: true,
+            draggable: false,
+            closed: true,
+            width: 500,
+            position: "center",
+            title: "发起预约"
+        });
+
+        $('#glrDialog').dialog({
+            model:true,
+            draggable:true,
+            closed:true,
+            width:400,
+            position:"center",
+            title:'添加关联人'
+        });
+
+        //关闭此页面
+        $('#exitBtn').click(function () {
+            PageRemove('/ajxq?ah='+encodeURI(ah))
+        });
+
+        //新增预约
+        $('#addYy').click(function () {
+            var str = ah+";"+ajmc;
+            addYy(str);
+        });
+
+        //如果来访人为案件关联人
+        $('#addGlr').click(function () {
+            $('#glrDialog').dialog('open');
+        });
+
+        $('#btn5').click(function () {
+            var form_str = serializeForm($('#glrDialog'));
+            if(checkLxfs(form_str['lfrlxfs'])){
+                if(checkSfzh(form_str['lfrsfzh'])){
+                    var str = "";
+                    for(var attr in form_str){
+                        if(attr!='name'){
+                            str += form_str[attr]+";";
+                        }
+                    }
+                    if(str.substr(str.length-1,str.length)==';'){
+                        str = str.substr(0,str.length-1);
+                    }
+                    $('#glrDialog').dialog('close');
+                    var str = '<div><input type="checkbox" name="lfr" data-target="'+str+'" ' +
+                        'style="width: 15px;height:15px;float:left;"' +
+                        'value="'+form_str['name']+'"/>' +
+                        '<label >'+form_str["name"]+'</label></div>';
+                    $('#glr').append(str);
+                }else {
+                    alert("身份证号码填写有误，请检查");
+                }
+            }else{
+                alert("联系方式填写错误，请检查");
+            }
+        });
+
+        /**
+         * 案件绑定预约发起
+         */
+        $('#btn4').click(function () {
+            var data = serialize($('#yyDialog'));
+            if(data['lfr']==''){
+                alert("请至少选择一个当事人或选择至少一个关联人!");
+            }else{
+                $.ajax({
+                    url: '/addYy',
+                    method: 'post',
+                    dataType: 'json',
+                    data: JSON.stringify(data),
+                    success: function () {
+                        $('#yyDialog').dialog("close");
+                        $.messager.show({
+                            title: "提示信息",
+                            msg: "成功添加一条预约记录！"
+                        });
+                        $('#ajlb').datagrid('reload');
+                        $('#t_yycx').datagrid('reload');
+                    }
+                });
+            }
+        });
+
+        /**
+         * 新增公告
+         */
+        $('#addGg').click(function () {
+            var zt = $('ul.dropdown-menu').css('display');
+            if(zt=='none'){
+                $('ul.dropdown-menu').css('display','block');
+            }else {
+                $('ul.dropdown-menu').css('display','none');
+            }
+        });
+        $('ul.dropdown-menu li').click(function () {
+            var lx = $(this).val();
+            addElement($('#curNav'),'/ggmodel?ah='+encodeURI(ah)+'&gglx='+lx,'',Gglx(parseInt(lx)));
+        });
+
+        //下拉菜单的触发事件
+        $('#yyzt').change(function () {
+            $('#yyzt').val();
+            var yydata={
+                ah: ah,
+                yyzt : $('#yyzt').val()
+            };
+            $('#ajyy').datagrid('load',yydata);
+        });
+
+        $('#ggzt').change(function () {
+            var ggdata = {
+                ah: ah,
+                ggzt : $('#ggzt').val()
+            };
+            $('#ajgg').datagrid('load',ggdata);
+        })
+    })
+</script>

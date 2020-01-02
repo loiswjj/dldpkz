@@ -1,0 +1,376 @@
+package nju.software.baseframework.controller;
+
+import nju.software.baseframework.configuration.FilterConfig;
+import nju.software.baseframework.data.dao.WelcomeTxtDao;
+import nju.software.baseframework.data.dao.WjbDao;
+import nju.software.baseframework.data.dataobject.*;
+import nju.software.baseframework.data.dynamicdDatabases.DynamicDataSource;
+import nju.software.baseframework.data.vo.*;
+import nju.software.baseframework.service.*;
+import nju.software.baseframework.service.impl.ScreenServiceImpl;
+import nju.software.baseframework.util.Image2Base64;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
+@Controller
+public class AdminController {
+
+    @Resource
+    private YyService yyService;
+
+    @Resource
+    private GgService ggService;
+
+    @Resource
+    private AjlbService ajlbService;
+
+    @Resource
+    private YhService yhService;
+
+    @Resource
+    private AdminService adminService;
+
+    @Resource
+    private ScreenServiceImpl screenService;
+
+    @Autowired
+    private WelcomeTxtDao welcomeTxtDao;
+
+    @Autowired
+    private WjbDao wjbDao;
+
+    private static Logger logger = Logger.getLogger(String.valueOf(AdminController.class));
+
+    /**
+     * 室内屏
+     * @return
+     */
+    @RequestMapping(value = "/dptb_sn",method = RequestMethod.GET)
+    public String dptb(ModelMap modelMap,HttpSession session){
+        String fydm = (String)session.getAttribute("fydm");
+        String fybh = FYEnum.getFybhByFydm(fydm);
+        modelMap.addAttribute("lx",1);
+        modelMap.addAttribute("fybh",fybh);
+        return "admin/dptb";
+    }
+
+    @RequestMapping(value = "/dptb_sw",method = RequestMethod.GET)
+    public String dptb_sw(ModelMap modelMap,HttpSession session){
+        String fydm = (String) session.getAttribute("fydm");
+        List<PubDmb> gglxList = GGLXEnum.getGglx();
+        String fybh = FYEnum.getFybhByFydm(fydm);
+        PubDmb xfgg = new PubDmb();
+        xfgg.setDmbh("8");
+        xfgg.setDmms("信访公告");
+        PubDmb sxbzxr = new PubDmb();
+        sxbzxr.setDmbh("9");
+        sxbzxr.setDmms("失信被执行人");
+        gglxList.add(xfgg);
+        gglxList.add(sxbzxr);
+        PubDmb sp = new PubDmb();
+        sp.setDmbh("10");
+        sp.setDmms("上传视频");
+        gglxList.add(sp);
+        modelMap.addAttribute("fybh",fybh);
+        modelMap.addAttribute("gglx",gglxList);
+        modelMap.addAttribute("lx",0);
+        return "admin/dptb";
+    }
+
+    @RequestMapping(value = "/dptb_p3",method = RequestMethod.GET)
+    public String dptb_p3(ModelMap modelMap,HttpSession session){
+        String fydm = (String) session.getAttribute("fydm");
+        List<PubDmb> gglxList = GGLXEnum.getGglx();
+        String fybh = FYEnum.getFybhByFydm(fydm);
+        if(fybh=="53"){
+            PubDmb xfgg = new PubDmb();
+            xfgg.setDmbh("8");
+            xfgg.setDmms("信访公告");
+            PubDmb sxbzxr = new PubDmb();
+            sxbzxr.setDmbh("9");
+            sxbzxr.setDmms("失信被执行人");
+            gglxList.add(xfgg);
+            gglxList.add(sxbzxr);
+        }
+        modelMap.addAttribute("fybh",fybh);
+        modelMap.addAttribute("gglx",gglxList);
+        modelMap.addAttribute("lx",2);
+        return "admin/dptb";
+    }
+
+    @RequestMapping(value = "/hyc_sn",method = RequestMethod.GET)
+    public String hyc(ModelMap modelMap,HttpSession session){
+        String fydm = (String) session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        //找到所有的模板
+        modelMap.addAttribute("lx",1);
+        modelMap.addAttribute("ImageDataList",Image2Base64.getImageStrList(welcomeTxtDao.getAllByLb(1)));
+        modelMap.addAttribute("fybh",FYEnum.getFybhByFydm(fydm));
+        modelMap.addAttribute("href","hyc_sn");
+        return "admin/hyc";
+    }
+
+    @RequestMapping(value = "/hyc_sw",method = RequestMethod.GET)
+    public String hyc_sw(ModelMap modelMap,HttpSession session){
+        String fydm = (String) session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        //找到所有的模板路径
+        List<String> _list = welcomeTxtDao.getAllByLb(1);
+        modelMap.addAttribute("lx",0);
+        modelMap.addAttribute("ImageDataList",Image2Base64.getImageStrList(_list));
+        modelMap.addAttribute("fybh",FYEnum.getFybhByFydm(fydm));
+        modelMap.addAttribute("href","hyc_sw");
+        return "admin/hyc";
+    }
+
+    @RequestMapping(value = "/hyc_p3",method = RequestMethod.GET)
+    public String hyc_p3(ModelMap modelMap,HttpSession session){
+        String fydm = (String) session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        //找到所有的模板路径
+        //List<String> _list = welcomeTxtDao.getAllByLb(1);
+        modelMap.addAttribute("lx",2);
+        modelMap.addAttribute("ImageDataList",Image2Base64.getImageStrList(welcomeTxtDao.getAllByLb(1)));
+        modelMap.addAttribute("fybh",FYEnum.getFybhByFydm(fydm));
+        modelMap.addAttribute("href","hyc_p3");
+        return "admin/hyc";
+    }
+
+    @RequestMapping(value = "/sh",method = RequestMethod.GET)
+    public String sh(){
+        return "admin/sh";
+    }
+
+    @RequestMapping(value = "/dwzz",method = RequestMethod.GET)
+    public String dwzz(){
+        return "admin/dwzz";
+    }
+
+    @RequestMapping(value = "xtgl",method = RequestMethod.GET)
+    public String xtgl(){
+        return "admin/xtgl";
+    }
+
+    @RequestMapping(value = "splist",method = RequestMethod.GET)
+    public String splist(){
+        return "admin/sp";
+    }
+
+    /**
+     * 预约表的审核
+     * @param page
+     * @param rows
+     * @return
+     */
+    @RequestMapping(value = "/yysh",method = RequestMethod.POST)
+    @ResponseBody
+    public TableModel<YyxqModel> yySh(@RequestParam String page,
+                                @RequestParam String rows,HttpSession session){
+        String fydm = (String) session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        int curPage = Integer.parseInt(page) -1;
+        int pageSize = Integer.parseInt(rows);
+        PageRequest pageRequest = new PageRequest(curPage,pageSize);
+        Page<YyxqModel> _list = yyService.getYySh(pageRequest);
+        TableModel<YyxqModel> tab = new TableModel<>(_list.getTotalElements(),
+                _list.getContent());
+        return tab;
+    }
+
+    /**
+     * 公告审核表
+     * @param page
+     * @param rows
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "ggsh",method = RequestMethod.POST)
+    public TableModel<GgxqModel> GgSh(@RequestParam String page,
+                                      @RequestParam String rows,
+                                      HttpSession session){
+        String fydm = (String)session.getAttribute("fydm");
+        Yhb yh = (Yhb)session.getAttribute(FilterConfig.SESSION_KEY);
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        int curPage = Integer.parseInt(page) -1;
+        int pageSize = Integer.parseInt(rows);
+        PageRequest pageRequest = new PageRequest(curPage,pageSize);
+        Page<GgxqModel> _list = ggService.getGgSh(pageRequest,yh);
+        TableModel<GgxqModel> tab = new TableModel<>(_list.getTotalElements(),
+                _list.getContent());
+        return tab;
+    }
+
+    @RequestMapping(value = "sh_gg",method = RequestMethod.GET)
+    public String sh_gg(HttpServletRequest request,
+                        ModelMap map, HttpSession session){
+        String fydm = (String) session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        Integer bh = Integer.valueOf(request.getParameter("bh"));
+        String fy = (String) session.getAttribute("fy");
+        map.addAttribute("fy",fy);
+        GgxqModel ggxqModel = ggService.findGgbByBh(bh);
+
+        DynamicDataSource.router(fydm);
+        AjxqModel ajxqModel = ajlbService.getAjxxByAh(ggxqModel.getAh());
+        map.addAttribute("ggb",ggxqModel);
+        map.addAttribute("ajxq",ajxqModel);
+        return "admin/ggxq";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "Yhb",method = RequestMethod.POST)
+    public TableModel<Yhb> yhb(@RequestParam String page,
+                               @RequestParam String rows,
+                               HttpSession session){
+        int curPage = Integer.parseInt(page) -1;
+        int pageSize = Integer.parseInt(rows);
+        PageRequest pageRequest = new PageRequest(curPage,pageSize);
+        String fydm = (String) session.getAttribute("fydm");
+        return yhService.getAllYh(fydm,pageRequest);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "UpdateYhxx",method = RequestMethod.POST)
+    public void UpdateYhxx(HttpServletRequest request,HttpSession session){
+        String fydm = (String)session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        Integer yhbh = Integer.valueOf(request.getParameter("bh"));
+        Integer sfyx = Integer.valueOf(request.getParameter("sfyx"));
+        Yhb yh = yhService.getYhByYhbh(yhbh);
+        yh.setSfyx(sfyx);
+        yhService.UpdateYhxx(yh);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "gnlb",method = RequestMethod.POST)
+    public TableModel<GnbDO> getGnlb(@RequestParam String page,
+                                     @RequestParam String rows,
+                                     HttpSession session){
+        int curPage = Integer.parseInt(page) -1;
+        int pageSize = Integer.parseInt(rows);
+        PageRequest pageRequest = new PageRequest(curPage,pageSize);
+        String fydm = (String) session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        Page<GnbDO> gnlb = adminService.getAllGn(pageRequest);
+        TableModel<GnbDO> tab = new TableModel<>(gnlb.getTotalElements()
+                ,gnlb.getContent());
+        return tab;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "getSp",method = RequestMethod.POST)
+    public TableModel<Wjb> splist(@RequestParam String page,
+                                     @RequestParam String rows){
+        DynamicDataSource.router("50");
+        int curPage = Integer.parseInt(page) -1;
+        int pageSize = Integer.parseInt(rows);
+        PageRequest pageRequest = new PageRequest(curPage,pageSize);
+        TableModel<Wjb> tab = adminService.getAllVideo(pageRequest);
+        return tab;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "UpdateGnxx",method = RequestMethod.POST)
+    public void UpdateGnxx(HttpServletRequest request,HttpSession session){
+        String fydm = (String)session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        Integer bh = Integer.valueOf(request.getParameter("bh"));
+        Integer status = Integer.valueOf(request.getParameter("zt"));
+        adminService.UpdateGnxx(bh,status);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "UpdateWjb",method = RequestMethod.POST)
+    public void UpdateWjb(@RequestParam Integer id,@RequestParam Integer zt){
+        DynamicDataSource.router("50");
+        adminService.UpdateWjb(id,zt);
+    }
+
+    /**
+     * 删除没有用的视频
+     */
+    @ResponseBody
+    @RequestMapping(value = "deleteSp",method = RequestMethod.POST)
+    public void deleteSp(@RequestParam Integer id){
+        try {
+            Wjb wjb = wjbDao.findWjbById(id);
+            //删除视频
+            String filepath = "D:/上传文件"+wjb.getBcwz();
+            File file = new File(filepath);
+            file.delete();
+            wjbDao.delete(wjb);
+        }catch (Exception e){
+            logger.info("删除视频失败"+e);
+        }
+    }
+
+    /**
+     * 管理公告是否播放
+     */
+    @ResponseBody
+    @RequestMapping(value = "ControlGgBf",method = RequestMethod.POST)
+    public TableModel<GgxqModel> ControlGgBf(@RequestParam String page,
+                                       @RequestParam String rows,
+                                             HttpSession session){
+        int curPage = Integer.parseInt(page) -1;
+        int pageSize = Integer.parseInt(rows);
+        PageRequest pageRequest = new PageRequest(curPage,pageSize);
+        String fydm = (String)session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        Page<Ggb> ggbs = ggService.getGgControllist(pageRequest);
+        List<GgxqModel> ggxqModels = new ArrayList<>();
+        for (int i = 0; i <ggbs.getContent().size() ; i++) {
+            ggxqModels.add(new GgxqModel(ggbs.getContent().get(i)));
+        }
+        TableModel<GgxqModel> tab = new TableModel<>(ggbs.getTotalElements(),ggxqModels);
+        return tab;
+    }
+
+    @RequestMapping(value = "sendWelcomeTxt",method = RequestMethod.POST)
+    public void sendWelcomeTxt(@RequestParam String txt,@RequestParam Integer lx, HttpSession session){
+        String fydm = (String)session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        Screen screen = adminService.getScreen(lx);
+        screenService.fgPutScreen(screen,"",txt);
+        WelcomeTxt _txt = new WelcomeTxt(txt,0);
+        welcomeTxtDao.save(_txt);
+        screen.setNrlb(_txt.getId());
+        adminService.UpdateScreenLb(screen);
+    }
+
+    @RequestMapping(value = "sendGgList",method = RequestMethod.POST)
+    public void sendGgList(@RequestParam int[] arr,@RequestParam Integer lx,HttpSession session){
+        String fydm = (String)session.getAttribute("fydm");
+        DynamicDataSource.router(FYEnum.getFybhByFydm(fydm));
+        Screen screen = adminService.getScreen(lx);
+        //获得所有的可播放的公告列表 -- 按类别分别播放
+        Map<Integer,List<Ggb>> ggMap = ggService.getGgnrList();
+        Map<Integer,List<Ggb>> map = new HashMap<>();
+
+        //放入选中的相关类型的公告
+        for (int i = 0; i < arr.length; i++) {
+            map.put(arr[i],ggMap.get(arr[i]));
+        }
+        screenService.fgPutScreen(screen,map);
+        //更新大屏应当显示的内容
+        screen.setNrlb(0);
+        adminService.UpdateScreenLb(screen);
+    }
+}

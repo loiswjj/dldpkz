@@ -1,0 +1,144 @@
+<div class="xq_nav">
+    <span style="font-weight: bold;">|</span>
+    <span>权限管理</span>
+</div>
+<div class="xq_nav">
+    <table id="dwzz"></table>
+</div>
+
+
+<!--查看预约详情-->
+<form id="yhxq">
+    <input hidden="hidden" name="yhbh">
+    <table class="yyTab">
+        <tr>
+            <td><span>用户名：</span></td>
+            <td><input readonly="readonly" name="yhmc"/></td>
+        </tr>
+        <tr>
+            <td><span>姓名：</span></td>
+            <td><input readonly="readonly" name="xm"/></td>
+        </tr>
+        <tr>
+            <td><span>部门：</span></td>
+            <td><input readonly="readonly" name="bm"/></td>
+        </tr>
+        <tr>
+            <td><span>是否有效：</span></td>
+            <td>
+                <select id="sfyx">
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <button type="reset" class="btn btn-primary TabButton">
+        <span class="icon-remove">
+            <span class="navPadding">重置</span>
+        </span>
+    </button>
+    <button type="button" class="btn btn-primary" onclick="updateyhxx()"
+            style="width: 120px;">
+        <span class="icon-ok">
+            <span class="navPadding">确认</span>
+        </span>
+    </button>
+</form>
+
+<script>
+    $(function () {
+        var tablewidth = document.documentElement.clientWidth - 260;
+        $('#yhxq').dialog({
+            modal: true,
+            draggable: true,
+            closed: true,
+            width: 400,
+            position: "center",
+            title: "查看预约"
+        });
+
+        $('#dwzz').datagrid({
+            idField: "yhbh",
+            width: tablewidth,
+            nowrap: true,
+            height: 'auto',
+            singleSelect: true,
+            striped: true,
+            scrollbarSize: 0,
+            rownumbers: true,
+            url: "Yhb",
+            loadMsg: "数据正在加载.....",
+            pagination: true,
+            pageList: [5, 10, 15, 20, 50],
+            pageSize: 20,
+            columns: [
+                [
+                    {
+                        field: 'yhdm', title: '用户名', align: 'center',
+                        width: tablewidth * 0.13
+                    },
+                    {
+                        field: 'yhmc', title: '姓名', align: "center",
+                        width: tablewidth * 0.2
+                    },
+                    {
+                        field: 'yhbm', title: '部门', align: "center",
+                        width: tablewidth * 0.2
+                    },
+                    {
+                        field: 'sfyx', title: '是否有效', align: "center",
+                        width: tablewidth * 0.2,
+                        formatter:function (value) {
+                            if(value=='1'){
+                                return '<span>是</span>'
+                            }else {
+                                return '<span>否</span>'
+                            }
+                        }
+                    },
+                    {
+                        field: 'yhbh', title: '操作', align: "center",
+                        width: tablewidth * 0.21,
+                        formatter: function (value, record) {
+                            record = JSON.stringify(record);
+                            return "<image class='icon' style='width: 15px;' " +
+                                "onclick='editor(" + record + ")' " +
+                                "src='../../static/image/oper.png'/>"
+                        }
+                    }
+                ]
+            ]
+        })
+    });
+
+    function editor(record) {
+        $('#yhxq').find("input[name='yhbh']").val(record.yhbh);
+        $('#yhxq').find("input[name='yhmc']").val(record.yhdm);
+        $('#yhxq').find("input[name='xm']").val(record.yhmc);
+        $('#yhxq').find("input[name='bm']").val(record.yhbm);
+        $('#yhxq').find("#sfyx").val(record.sfyx);
+        $('#yhxq').dialog('open');
+    }
+
+    function updateyhxx() {
+        var yhbh = $('#yhxq').find("input[name='yhbh']").val();
+        var sfyx = $('#yhxq').find("#sfyx").val();
+        $.ajax({
+            url:'UpdateYhxx',
+            method:'post',
+            data:{
+                "bh":yhbh,
+                "sfyx":sfyx
+            },
+            success:function () {
+                $('#yhxq').dialog('close');
+                $.messager.show({
+                    title:'提示消息',
+                    msg:'该条用户记录修改成功！'
+                });
+                $('#dwzz').datagrid('reload');
+            }
+        })
+    }
+</script>

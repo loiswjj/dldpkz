@@ -1,0 +1,76 @@
+<style>
+    .fixedtitle {
+        background: #000;
+        position: relative;
+        z-index: 1000;
+        padding-top: 30px;
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+        font-size: 24px;
+        padding-bottom: 20px;
+    }
+
+    table td {
+        height: 30px;
+    }
+</style>
+<!--<div id="screen"  xmlns:th="http://www.w3.org/1999/xhtml">-->
+<div style="margin: 0 auto;width: 75%;" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div style="float:left;">
+        <div class="fixedtitle">失信被执行人（自然人）公示</div>
+        <table id="sxbzxrList">
+            <tr th:each="item:${zrlList}">
+                <td th:text="${item.bzxrmc}"></td>
+                <td th:text="${item.zjhm}"></td>
+            </tr>
+        </table>
+    </div>
+    <div style="float: right;">
+        <div class="fixedtitle">失信被执行人（法人）公示</div>
+        <table id="zzjgList">
+            <tr th:each="item:${zzjgList}">
+                <td th:text="${item.bzxrmc}"></td>
+                <td th:text="${item.zzjgdm}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!--</div>-->
+
+<style>
+    body {
+        background-color: black;
+        color: red;
+        margin: 0;
+        overflow: hidden;
+    }
+</style>
+<script src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../static/js/my/common.js"></script>
+<script type="text/javascript">
+    $(function () {
+//定义速度
+        var speed = 10.0;
+        var margin1 = 0;
+        var margin2 = 0;
+        windowHeight = document.documentElement.clientHeight;
+        $("#screen").css("min-height", windowHeight);
+
+        setInterval(move, 1000);
+
+        function move() {
+            var height1 = $("#sxbzxrList")[0].clientHeight;
+            margin1 += speed;
+            margin1 %= height1;
+            console.log(margin1);
+            $("#sxbzxrList").css("margin-top", -1 * margin1 + "px");
+            var height2 = $("#zzjgList")[0].clientHeight;
+            margin2 += speed;
+            margin2 %= height2;
+            console.log(margin1);
+            $("#zzjgList").css("margin-top", -1 * margin2 + "px");
+        }
+    });
+</script>

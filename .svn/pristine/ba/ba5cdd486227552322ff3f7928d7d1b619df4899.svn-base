@@ -1,0 +1,601 @@
+<div class="clearfix" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="detail">
+        <form id="mysearch" method="post">
+            <div class="row" style="margin: 5px">
+                <select hidden="hidden" id="jafs_map">
+                    <option th:each="item:${jafs}" th:value="${item.key}" th:text="${item.value}">
+                </select>
+                <div class="col-sm-3 form-inline">
+                    <label class="input-group-text">案号：</label>
+                    <input type="text" name="ah" class="form-control" aria-describedby="basic-addon3"
+                           placeholder="请输入案号" style="width: 150px">
+                </div>
+                <div class="col-sm-6 form-inline">
+                    <label class="input-group-text">案件名称:</label>
+                    <input type="text" name="ajmc" placeholder="请输入案件名称" class="form-control"
+                           aria-describedby="basic-addon3" style="width: 426px;">
+                </div>
+                <div class="col-sm-3 form-inline">
+                    <label class="input-group-text">当事人：</label>
+                    <input type="text" name="dsr" class="form-control" aria-describedby="basic-addon3"
+                           placeholder="请输入当事人" style="width: 144px;">
+                </div>
+            </div>
+            <div class="row" style="margin: 5px">
+                <div class="form-inline col-sm-3">
+                    <label class="input-group-text">审判长：</label>
+                    <input type="text" name="spz" class="form-control" aria-describedby="basic-addon3"
+                           placeholder="审判长" style="width: 150px">
+                </div>
+                <div class="form-inline col-sm-3">
+                    <label class="input-group-text">审判员：</label>
+                    <input type="text" name="spy" class="form-control" aria-describedby="basic-addon3"
+                           placeholder="请输入审判员" style="width: 150px">
+                </div>
+                <div class="form-inline col-sm-3">
+                    <label class="input-group-text">案件性质：</label>
+                    <select name="ajxz" id="ajxz" class="form-control" aria-describedby="basic-addon3" style="width: 150px">
+                        <option value="">请选择案件性质</option>
+                        <option th:each="item:${ajxz}" th:value="${item.dmbh}" th:text="${item.dmms}"></option>
+                    </select>
+                </div>
+                <div class="form-inline col-sm-3">
+                    <label class="input-group-text">案件状态：</label>
+                    <select name="ajzt" class="form-control" aria-describedby="basic-addon3" style="width: 130px">
+                        <option value="">请选择案件状态</option>
+                        <option th:each="item:${ajzt}" th:value="${item.dmbh}" th:text="${item.dmms}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin: 5px">
+                <div class="form-inline col-sm-3">
+                    <label class="input-group-text">审判庭：</label>
+                    <select name="spt" class="form-control" aria-describedby="basic-addon3" style="width: 150px">
+                        <option value="">请选择审判庭</option>
+                        <option th:each="item:${spt}" th:value="${item.dmbh}" th:text="${item.dmms}"></option>
+                    </select>
+                </div>
+                <div class="form-inline col-sm-3">
+                    <label class="input-group-text">结案方式：</label>
+                    <select name="jafs" id="jafs" class="form-control" aria-describedby="basic-addon3" style="width: 150px">
+                        <option>请输入结案方式</option>
+                    </select>
+                </div>
+                <div class="form-inline col-sm-3">
+                    <label class="input-group-text">是否归档：</label>
+                    <select name="sfgd" class="form-control" aria-describedby="basic-addon3" style="width: 150px">
+                        <option value="">请选择</option>
+                        <option value="1">是</option>
+                        <option value="0">否</option>
+                    </select>
+                </div>
+                <div class="form-inline col-sm-3">
+                    <label class="input-group-text">适用程序：</label>
+                    <select name="sycx" class="form-control" aria-describedby="basic-addon3" style="width: 130px">
+                        <option value="">请选择适用程序</option>
+                        <option th:each="item:${sycx}" th:value="${item.dmbh}" th:text="${item.dmms}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-5"></div>
+                <div class="col-sm-3">
+                    <button type="button" class="btn btn-primary" id="searchbtn">
+                        <span class="icon-search"><span class="navPadding">搜索</span></span></button>
+                </div>
+            </div>
+            <button style="display: none;" type="reset" id="reset"></button>
+        </form>
+    </div>
+    <div class="toolalign" role="toolbar" aria-label="Toolbar with button groups">
+        <span>
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+            <button type="button" class="btn btn-secondary" id="moreInfo">
+                <span class="icon-file-alt"><span class="navPadding">查看详情</span></span>
+            </button>
+            <button type="button" class="btn btn-secondary" id="quickReserve">
+                <span class="icon-pencil"><span class="navPadding">快速预约</span></span></button>
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Second group">
+            <button type="button" class="btn btn-secondary" id="updateTable">
+                <span class="icon-refresh"><span class="navPadding">刷新</span></span></button>
+            <button type="button" class="btn btn-secondary" id="printTable">
+                <span class="icon-print"><span class="navPadding">打印</span></span></button>
+            <button type="button" class="btn btn-secondary" id="exportTable">
+                <span class="icon-share"><span class="navPadding">导出</span></span></button>
+        </div>
+        </span>
+    </div>
+
+    <div style="margin-left: 10px;">
+        <table id="ajlb" style="border-bottom: 0px;"></table>
+    </div>
+    <input name="fybh" hidden="hidden" th:value="${fybh}"/>
+</div>
+
+<!--快速预约窗口-->
+<form id="ksyyDialog" xmlns:th="http://www.w3.org/1999/xhtml">
+    <table class="yyTab">
+        <tr>
+            <td class="format"><span class="import">*</span>来访人姓名:</td>
+            <td><input type="text" name="lfr" class="require" placeholder="来访人姓名"/></td>
+        </tr>
+        <tr>
+            <td class="format"><span class="import">*</span>身份证号：</td>
+            <td><input type="text" name="lfrsfzh" class="require" placeholder="身份证号"/></td>
+        </tr>
+        <tr>
+            <td class="format">联系方式:</td>
+            <td><input type="text" name="lfrlxfs" placeholder="联系方式"
+                       style="height: 30px;width: 260px;"/></td>
+        </tr>
+        <tr>
+            <td class="format">来访时间:</td>
+            <td><input type="text" name="lfsj"/></td>
+        </tr>
+        <tr>
+            <td class="format">备注:</td>
+            <td><input type="text" name="bz" placeholder="备注"/></td>
+        </tr>
+        <tr>
+            <td class="format">接访地点:</td>
+            <td><input type="text" name="jfdd" placeholder="接访地点"/></td>
+        </tr>
+
+        <tr>
+            <td class="format">接访部门:</td>
+            <td><input type="text" name="jfbm" value=""/></td>
+        </tr>
+        <tr>
+            <td class="format">接访人:</td>
+            <td><input type="text" name="jfr" th:value="${jfr}"/></td>
+        </tr>
+
+        <tr>
+            <td class="format">联系方式:</td>
+            <td><input type="text" name="jfrlxfs" value=""/></td>
+        </tr>
+    </table>
+
+    <button type="reset" id="btn1" class="btn btn-primary TabButton">
+        <span class="icon-remove">
+            <span class="navPadding">重置</span>
+        </span>
+    </button>
+    <button type="button" id="btn2" class="btn btn-primary" style="width: 120px;">
+        <span class="icon-ok">
+            <span class="navPadding">确认</span>
+        </span>
+    </button>
+</form>
+
+<!--案件绑定预约窗口-->
+<form id="yyDialog" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="clearfix" style="overflow: auto;">
+    <table class="yyTab">
+        <tr>
+            <td class="format"><span class="import">*</span>案号:</td>
+            <td><input type="text" name="ah" readonly="true"/></td>
+        </tr>
+        <tr>
+            <td class="format"><span class="import">*</span>案件名称:</td>
+            <td><input type="text" name="ajmc" readonly="readonly"/></td>
+        </tr>
+        <tr>
+            <td class="format">本案当事人:</td>
+            <td>
+                <div id="dsr">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="format">本案关联人:</td>
+            <td>
+                <button id="addGlr" type="button" style="margin-left: 0px">
+                    <span class="icon-plus"></span>
+                </button>
+                <div id="glr"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="format">预约开始时间:</td>
+            <td><input type="text" name="lfsj"/></td>
+        </tr>
+        <tr>
+            <td class="format">接访地点:</td>
+            <td><input type="text" name="jfdd" placeholder="接访地点"/></td>
+        </tr>
+        <tr>
+            <td class="format">接访部门:</td>
+            <td><input type="text" name="jfbm" value=""/></td>
+        </tr>
+        <tr>
+            <td class="format">接访人:</td>
+            <td><input type="text" name="jfr" th:value="${jfr}"/></td>
+        </tr>
+        <tr>
+            <td class="format">联系方式:</td>
+            <td><input type="text" name="jfrlxfs" value=""/></td>
+        </tr>
+    </table>
+    </div>
+    <button type="reset" id="btn3" class="btn btn-primary TabButton">
+        <span class="icon-remove">
+            <span class="navPadding">重置</span>
+        </span>
+    </button>
+    <button type="button" id="btn4" class="btn btn-primary" style="width: 120px;">
+        <span class="icon-ok">
+            <span class="navPadding">确认</span>
+        </span>
+    </button>
+</form>
+
+<!--添加案件关联人-->
+<form id="glrDialog">
+    <table class="yyTab">
+        <tr>
+            <td><span>姓名：</span></td>
+            <td><input name="name"/></td>
+        </tr>
+        <tr>
+            <td><span>关联当事人：</span></td>
+            <td><select id="gldsr" name="gldsr"></select></td>
+        </tr>
+        <tr>
+            <td><span>联系方式：</span></td>
+            <td><input name="lfrlxfs"/></td>
+        </tr>
+        <tr>
+            <td><span>关系：</span></td>
+            <td>
+                <select name="ybagx" style="width: 260px;height: 30px;">
+                    <option value="1">父母</option>
+                    <option value="2">子女</option>
+                    <option value="3">配偶</option>
+                    <option value="4">代理律师</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><span>身份证号：</span></td>
+            <td><input name="lfrsfzh"/></td>
+        </tr>
+    </table>
+    <button type="reset" class="btn btn-primary TabButton">
+        <span class="icon-remove">
+            <span class="navPadding">重置</span>
+        </span>
+    </button>
+    <button type="button" id="btn5" class="btn btn-primary" style="width: 120px;">
+        <span class="icon-ok">
+            <span class="navPadding">确认</span>
+        </span>
+    </button>
+</form>
+
+<style>
+    .combo {
+        height: 30px;
+        width: 260px;
+    }
+</style>
+
+<script>
+    $(function () {
+        //初始化表格
+        initTable();
+        findPage().find('#ksyyDialog').dialog({
+            modal: true,
+            draggable: true,
+            closed: true,
+            width: 475,
+            position: "center",
+            title: "快速预约"
+        });
+
+        findPage().find('#yyDialog').dialog({
+            modal: true,
+            draggable: true,
+            closed: true,
+            width: 500,
+            position: "center",
+            title: "发起预约"
+        });
+
+        findPage().find('#glrDialog').dialog({
+            model:true,
+            draggable:true,
+            closed:true,
+            width:400,
+            position:"center",
+            title:'添加关联人'
+        });
+
+        var nowTime = new Date();
+        var str = nowTime.getFullYear() + "-" + (nowTime.getMonth() + 1)
+            + "-" + nowTime.getDate();
+        $("input[name='lfsj']").val(str);
+        $("input[name='lfsj']").datetimebox({
+            panelWidth: 300,
+            panelHeight: 210,
+            editable: false,
+            showSeconds: true
+        });
+
+        findPage().find("#ajxz").change(function () {
+            var ajxz = findPage().find("#ajxz").val();
+            console.log(ajxz)
+            var obj = findPage().find('#jafs_map').get(0);
+            for (var i = 0; i < obj.options.length; i++) {
+                var value = obj.options[i].value;
+                if(value == ajxz){
+                    var arr = eval(obj.options[i].text);
+                    findPage().find('#jafs').empty();
+                    findPage().find('#jafs').append('<option value="">请选择结案方式</option>');
+                    for (var j = 0; j < arr.length; j++) {
+                        findPage().find('#jafs').append('<option value="'+arr[j].dmbh+'">'
+                            +arr[j].dmms+'</option>')
+                    }
+                    return false;
+                }
+            }
+        });
+
+        /*搜索按钮*/
+
+        findPage().find('#searchbtn').click(function () {
+            $('#ajlb').datagrid('load', serializeForm(findPage().find('#mysearch')))
+        });
+
+        /*刷新按钮*/
+        findPage().find('#updateTable').click(function () {
+            $('#ajlb').datagrid('reload');
+        });
+
+        /*查看详情*/
+        findPage().find('#moreInfo').click(function () {
+            var arr = $('#ajlb').datagrid('getSelections');
+            if (arr.length != 1) {
+                $.messager.show({
+                    title: "提示信息",
+                    msg: "请选择需要查看的一条数据！"
+                });
+            }else {
+                //跳转至案件详情
+                addElement($('#curNav'), '/ajxq?ah=' + encodeURI(arr[0].ah), '', '案件详情');
+            }
+        });
+
+        /*快速预约*/
+        findPage().find('#quickReserve').click(function () {
+            $('#ksyyDialog').dialog('open')
+        });
+
+        /*打印表格*/
+        findPage().find('#printTable').click(function () {
+
+        });
+
+        /*导出表格*/
+        findPage().find('#exportTable').click(function () {
+            var title = getColumnField($('#ajlb'));
+            var content = getSelectedRows($('#ajlb'));
+            console.log(content)
+            var lx = 'ajlb';
+            window.location.href = "/export?titles=" + title + "&lx="
+                + lx+"&content="+content;
+        });
+
+        /*确定按钮*/
+        $('#btn2').click(function () {
+            var data = serializeForm($('#ksyyDialog'));
+            if(isReady($('#ksyyDialog'))){
+                $.ajax({
+                    url: '/addYy',
+                    method: 'post',
+                    dataType: 'json',
+                    data: JSON.stringify(data),
+                    success: function () {
+                        $('#ksyyDialog').dialog("close");
+                        $.messager.show({
+                            title: "提示信息",
+                            msg: "成功添加一条预约记录！"
+                        });
+                        $('#ajlb').datagrid('reload');
+                    }
+                })
+            }
+        });
+
+        //如果来访人为案件关联人
+        $('#addGlr').click(function () {
+            $('#glrDialog').dialog('open');
+        });
+
+        $('#btn5').click(function () {
+            var form_str = serializeForm($('#glrDialog'));
+            if(checkLxfs(form_str['lfrlxfs'])){
+                if(checkSfzh(form_str['lfrsfzh'])){
+                    var str = "";
+                    for(var attr in form_str){
+                        if(attr!='name'){
+                            str += form_str[attr]+";";
+                        }
+                    }
+                    if(str.substr(str.length-1,str.length)==';'){
+                        str = str.substr(0,str.length-1);
+                    }
+                    $('#glrDialog').dialog('close');
+                    var str = '<div><input type="checkbox" name="lfr" data-target="'+str+'" ' +
+                        'style="width: 15px;height:15px;float:left;"' +
+                        'value="'+form_str['name']+'"/>' +
+                        '<label >'+form_str["name"]+'</label></div>';
+                    $('#glr').append(str);
+                }else {
+                    alert("身份证号码填写有误，请检查")
+                }
+            }else{
+                alert("联系方式填写错误，请检查")
+            }
+        });
+
+        /**
+         * 案件绑定预约发起
+         */
+        $('#btn4').click(function () {
+            var data = serialize($('#yyDialog'));
+            if(data['lfr']==''){
+                alert("请至少选择一个当事人或选择至少一个关联人!");
+            }else{
+                $.ajax({
+                    url: '/addYy',
+                    method: 'post',
+                    dataType: 'json',
+                    data: JSON.stringify(data),
+                    success: function () {
+                        $('#yyDialog').dialog("close");
+                        $.messager.show({
+                            title: "提示信息",
+                            msg: "成功添加预约记录！"
+                        });
+                        $('#ajlb').datagrid('reload');
+                        $('#ajlb').datagrid('unselectAll');
+                    }
+                });
+            }
+        });
+    });
+
+    function initTable() {
+        var fybh = findPage().find("input[name='fybh']").val();
+        var flag = false;
+        if(fybh=='53'){
+            flag = true;
+        }
+        var tablewidth = document.documentElement.clientWidth - 210;
+        $('#ajlb').datagrid({
+            idField: "ajxh",
+            width: tablewidth,
+            nowrap: false,
+            height: 'auto',
+            striped: true,
+            scrollbarSize: 0,
+            rownumbers: true,
+            url: "ajlbTable",
+            loadMsg: "数据正在加载.....",
+            pagination: true,
+            pageList: [5, 10, 15, 20, 50],
+            pageSize: 10,
+            columns: [
+                [
+                    {
+                        field: 'ck', title: '全选', align: 'center', checkbox: true,
+                    },
+                    {field: 'ajxh', hidden: true},
+                    {
+                        field: 'ah', title: '案号', align: "center", width: tablewidth * 0.15,
+                        formatter: function (value, record, index) {
+                            if (value.length > 15) {
+                                str = value.substr(0, 15) + '...';
+                                return "<span data-toggle='tooltip'" +
+                                    " data-placement='bottom' " +
+                                    "title='\"" + value + "\"'>" + str + "</span>"
+                            } else {
+                                return "<span>" + value + "</span>"
+                            }
+                        }
+                    },
+                    {
+                        field: 'ajmc', title: '案件名称', align: "center", width: tablewidth * 0.15,
+                        formatter: function (value, record, index) {
+                            if (value.length > 10) {
+                                str = value.substr(0, 10) + '...';
+                                return "<span data-toggle='tooltip'" +
+                                    " data-placement='bottom' " +
+                                    "title='\"" + value + "\"'>" + str + "</span>"
+                            } else {
+                                return "<span>" + value + "</span>"
+                            }
+                        }
+                    },
+                    {field: 'spz', title: '审判长', align: "center", width: tablewidth * 0.05,},
+                    {field: 'spy', title: '审判员', align: "center", width: tablewidth * 0.05},
+                    {field: 'fgzl', title: '法官助理', align: "center", width: tablewidth * 0.05},
+                    {field: 'sjy', title: '书记员', align: "center", width: tablewidth * 0.05},
+                    {field: 'larq', title: '立案时间', align: "center", width: tablewidth * 0.08},
+                    {field: 'sycx', title: '适用程序', align: "center", width: tablewidth * 0.05},
+                    {
+                        field: 'yyzt', title: '预约情况', align: "center", width: tablewidth * 0.08,
+                        hidden:flag,
+                        formatter: function (value, record, index) {
+                            var str = record.ah + ";" + record.ajmc;
+                            if (value == '未预约') {
+                                return "<button class='button' value='" + value + "' " +
+                                    "onclick='addYy(\"" + str + "\")' " +
+                                    " onmouseover='mouse_over(this)' " +
+                                    " onmouseout='mouse_out(this)' " +
+                                    "style=\"" + yyztcolor(value) + "\">" + value + "</button>"
+                            } else {
+                                return "<button class='button' value='" + value + "' " +
+                                    "onclick='readYy(\""+record.ah+"\")' " +
+                                    " onmouseover='mouse_over(this)' " +
+                                    " onmouseout='mouse_out(this)' " +
+                                    "style=\"" + yyztcolor(value) + "\">" + value + "</button>"
+                            }
+                        }
+                    },
+                    {
+                        field: 'cpggzt', title: '送达请诉状副本及开庭传票公告', align: "center",
+                        width: tablewidth * 0.08,
+                        formatter: function (value, record, index) {
+                            return GgControl(value, record, 1);
+                        }
+                    },
+                    {
+                        field: 'pqggzt', title: '开庭排期公告', align: "center",
+                        width: tablewidth * 0.08,hidden:true,
+                        formatter: function (value, record, index) {
+                            return GgControl(value, record, 2);
+                        }
+                    },
+                    {
+                        field: 'sdpjszt', title: '送达判决书公告', align: "center",
+                        width: tablewidth * 0.08,
+                        formatter: function (value, record, index) {
+                            return GgControl(value, record, 3);
+                        }
+                    },
+                    {
+                        field: 'zzgg', title: '执行公告', align: "center",
+                        width: tablewidth * 0.08,
+                        formatter: function (value, record, index) {
+                            return GgControl(value, record, 4);
+                        }
+                    },
+                    {
+                        field: 'sxgg', title: '失信被执行人公告', align: "center",
+                        width: tablewidth * 0.08,
+                        formatter: function (value, record, index) {
+                            return GgControl(value, record, 5);
+                        }
+                    },
+                    {
+                        field: 'cdsggzt', title: '送达裁定书公告', align: "center",
+                        width: tablewidth * 0.08,
+                        formatter: function (value, record, index) {
+                            return GgControl(value, record, 6)
+                        }
+                    },
+                    {
+                        field: 'zdyggzt', title: '自定义公告', align: "center",
+                        width: tablewidth * 0.08,
+                        formatter: function (value, record, index) {
+                            return GgControl(value, record, 7);
+                        }
+                    }
+                ]
+            ]
+        });
+    }
+</script>

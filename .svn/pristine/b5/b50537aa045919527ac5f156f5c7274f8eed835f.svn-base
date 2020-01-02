@@ -1,0 +1,198 @@
+<div class="clearfix" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div id="href" th:text="${href}" style="display: none;"></div>
+    <div id="fybh" th:text="${fybh}" style="display: none;"></div>
+    <div id="lx" th:text="${lx}" style="display:none;"></div>
+    <div class="leftdiv">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 15px;">欢迎词内容</span>
+        </div>
+        <div id="welcome_" class="xq_container" style="padding: 0;">
+        </div>
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-left: 30%">
+            <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <button type="button" class="btn btn-secondary" id="read">
+                    <span class="icon-file-text"><span class="navPadding">预览 </span></span></button>
+                <button type="button" class="btn btn-secondary" id="release">
+                    <span class="icon-bullhorn"><span class="navPadding">发布</span></span></button>
+                <button type="button" class="btn btn-secondary" id="exit" >
+                    <span class="icon-off"><span class="navPadding">关闭</span></span></button>
+            </div>
+        </div>
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 15px;">现有模板：</span>
+        </div>
+        <div class="xq_nav" th:each="item:${ImageDataList}">
+            <image class="model" data-id="0" th:src="${item}" datonmouseover="BigImg(this)" onmouseout="normalImg(this)" onclick="chooseModel(this)"></image>
+        </div>
+    </div>
+    <div class="rightdiv">
+        <div class="xq_nav">
+            <span style="font-weight: bold;">|</span>
+            <span style="font-size: 15px;">大屏预览</span>
+        </div>
+        <div class="screen">
+            <span></span>
+        </div>
+        <div class="xq_nav clearfix">
+            <div class="small_screen border_style" data-id="0" style="background-color: black;" onclick="addBorderStyle(this)"></div>
+            <div class="small_screen" data-id="1" style="background: url('../../static/image/border.png');background-size:cover" onclick="addBorderStyle(this)"></div>
+        </div>
+        <div class="xq_nav">
+            <button type="button" class="btn btn-primary" id="save" style="width: 100px;">保存为模板</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        //富文本编辑器使用
+        var E = window.wangEditor;
+        var editor = new E('#welcome_');
+        editor.create();
+        //预览
+        findPage().find('#read').click(function () {
+            var obj = findPage();
+            var flag = checkModel();
+            console.log(flag)
+            if(flag!=''){
+                obj.find('.screen').css('background-image','url('+flag+')');
+            }else {
+                obj.find('.screen').css('background-image','url('+flag+')');
+                var text = editor.txt.html();
+                obj.find('.screen').html(text);
+            }
+        });
+
+        //退出
+        findPage().find('#exit').click(function () {
+            var href = findPage().find('#href').text();
+            PageRemove(href);
+        });
+
+        //保存为模板图片
+        findPage().find('#save').click(function () {
+            html2Image(findPage().find('.screen'),1);
+        });
+        //发布
+        findPage().find('#release').click(function () {
+            findPage().find('#read').click();
+            var lx = findPage().find('#lx').text();
+            var fybh = findPage().find('#fybh').text();
+            // console.log(fybh)
+            if(fybh=="53"){
+                html2canvas(findPage().find('.screen')).then(function (value) {
+                    var imageUrl = value.toDataURL("image/png");
+                    $.ajax({
+                        url:'ImageDownload',
+                        data:{
+                            "url":imageUrl,
+                            "lx":parseInt(lx)
+                        },
+                        success:function (res) {
+                            if(res == '保存模板成功！'){
+                                window.open('/showggList?lb=1') ;
+                            }
+                        }
+                    })
+                })
+
+            }else {
+                $.ajax({
+                    url: "sendWelcomeTxt",
+                    method: 'post',
+                    data: {
+                        txt:editor.txt.text(),
+                        lx:parseInt(lx)
+                    },
+                    success: function () {
+                        $.messager.show({
+                            title: "提示信息",
+                            msg: "成功发布欢迎词！"
+                        });
+                    }
+                })
+            }
+        })
+    });
+
+    /***
+     * @param str
+     * @returns {string}
+     */
+    function format_Str(str) {
+        return str.replace(/\r\n/g,'<br/>').replace(/\n/g,'<br/>').replace(/\s/g,'&nbsp');
+    }
+
+    function addBorderStyle(_obj) {
+        var obj = findPage();
+        obj.find('.small_screen').each(function (k,v) {
+            $(v).removeClass('border_style');
+        });
+        $(_obj).addClass('border_style');
+        var id = $(_obj).data('id');
+        if(id == '0'){
+            obj.find('.screen').css('background-image','');
+        }else {
+            obj.find('.screen').css('background-image','url(\'../../static/image/border.png\')');
+        }
+    }
+
+    function html2Image(obj,lx) {
+        html2canvas(obj).then(function (value) {
+            var imageUrl = value.toDataURL("image/png");
+            $.ajax({
+                url:'ImageDownload',
+                data:{
+                    "url":imageUrl,
+                    "lx":parseInt(lx)
+                },
+                success:function (res) {
+                    $.messager.show({
+                        title: "提示信息",
+                        msg: res
+                    });
+                }
+            })
+        })
+    }
+
+    function BigImg(obj) {
+        $(obj).css('width','300px');
+        $(obj).css('height','180px');
+    }
+
+    function normalImg(obj) {
+        $(obj).css('width','200px');
+        $(obj).css('height','120px');
+    }
+
+    function chooseModel(obj) {
+        var flag = $(obj).data('id');
+        if(flag==0){
+            //没有选中
+            $(obj).data('id',1);
+            $(obj).addClass('border_style')
+        }else {
+            //选中
+            $(obj).data('id',0);
+            $(obj).removeClass('border_style')
+        }
+    }
+
+    //用于检测是否选中了模板
+    function checkModel() {
+        var obj = findPage();
+        var flag = '';
+        obj.find('.model').each(function (k,v) {
+            var id = $(v).data('id');
+            if(id==1){
+                flag = $(v)[0].src;
+                return false;
+            }
+        });
+        return flag;
+    }
+
+</script>

@@ -1,0 +1,211 @@
+<div class="clearfix">
+    <div class="xq_nav">
+        <span style="font-weight: bold;">|</span>
+        <span>预约审核</span>
+    </div>
+    <div class="xq_nav">
+        <table id="yysh"></table>
+    </div>
+
+    <div class="xq_nav">
+        <span style="font-weight: bold;">|</span>
+        <span>公告审核</span>
+    </div>
+    <div class="xq_nav">
+        <table id="ggsh"></table>
+    </div>
+</div>
+
+<!--查看预约详情-->
+<form id="yyxqDialog">
+    <input hidden="hidden" name="bh"/>
+    <table class="yyTab">
+        <tr>
+            <td><span>来访时间：</span></td>
+            <td><input readonly="readonly" name="lfsj"/></td>
+        </tr>
+        <tr>
+            <td><span>接访地点：</span></td>
+            <td><input readonly="readonly" name="jfdd"/></td>
+        </tr>
+        <tr>
+            <td><span>来访人：</span></td>
+            <td><input readonly="readonly" name="lfr"/></td>
+        </tr>
+        <tr>
+            <td><span>案号：</span></td>
+            <td><input readonly="readonly" name="ah"/></td>
+        </tr>
+        <tr>
+            <td><span>案件名称：</span></td>
+            <td><input readonly="readonly" name="ajmc"/></td>
+        </tr>
+        <tr>
+            <td><span>接访人：</span></td>
+            <td><input readonly="readonly" name="jfr"/></td>
+        </tr>
+    </table>
+    <button class="btn btn-primary TabButton" onclick="yybtg()">
+        <span class="icon-remove">
+            <span class="navPadding">不通过</span>
+        </span>
+    </button>
+    <button type="button" class="btn btn-primary" onclick="yytg()" style="width: 120px;">
+        <span class="icon-ok">
+            <span class="navPadding">通过</span>
+        </span>
+    </button>
+</form>
+
+<script>
+    $(function () {
+        initTable();
+        $('#yyxqDialog').dialog({
+            modal: true,
+            draggable: true,
+            closed: true,
+            width: 470,
+            position: "center",
+            title: "查看预约"
+        });
+    });
+
+    function initTable() {
+        var tablewidth = document.documentElement.clientWidth - 260;
+        $('#yysh').datagrid({
+            nowrap: false,
+            width: tablewidth,
+            height: 'auto',
+            striped: true,
+            singleSelect: true,
+            scrollbarSize: 0,
+            url: "yysh",
+            loadMsg: "数据正在加载.....",
+            pagination: true,
+            rownumbers: true,
+            pageList: [5, 10, 15, 20, 50],
+            pageSize: 10,
+            columns: [
+                [
+                    {field: 'lfsjStr', title: '来访时间', width: tablewidth * 0.15, align: 'center'},
+                    {field: 'jfdd', title: '接访地点', width: tablewidth * 0.1, align: 'center'},
+                    {
+                        field: 'lfrxm', title: '来访人', width: tablewidth * 0.1, align: 'center',
+                        formatter: function (value) {
+                            if (value.length < 6) {
+                                return '<span>' + value + '</span>';
+                            } else {
+                                var str = value.substr(0, 6) + '...';
+                                return '<span>' + str + '</span>'
+                            }
+                        }
+                    },
+                    {field: 'ah', title: '案号', width: tablewidth * 0.18, align: "center"},
+                    {
+                        field: 'ajmc', title: '案件名称', width: tablewidth * 0.18, align: "center",
+                        formatter: function (value, record) {
+                            if (value.length > 12) {
+                                var str = value.substr(0, 12) + '...';
+                                return '<span>' + str + '</span>';
+                            } else {
+                                return '<span>' + value + '</span>';
+                            }
+                        }
+                    },
+                    {field: 'jfr', title: '接访人', width: tablewidth * 0.1, align: "center"},
+                    {
+                        field: 'bh', title: '操作', width: tablewidth * 0.14, align: "center",
+                        formatter: function (value, record) {
+                            var str = JSON.stringify(record);
+                            return "<image class='icon' data-toggle='tooltip' " +
+                                "onclick='yy_sh(" + value + ",6)'" +
+                                " title='通过' src='../../static/image/success.png'/>" +
+                                "<image class='icon' data-toggle='tooltip' " +
+                                "onclick='yy_sh(" + value + ",7)'" +
+                                " title='不通过' src='../../static/image/fail.png'/>" +
+                                "<image class='icon' data-toggle='tooltip' " +
+                                "onclick='readYyxq(" + str + ")'" +
+                                " title='查看' src='../../static/image/look.png'/>";
+                        }
+                    }
+                ]
+            ]
+        });
+        $('#ggsh').datagrid({
+            nowrap: false,
+            width: tablewidth,
+            height: 'auto',
+            striped: true,
+            scrollbarSize: 0,
+            singleSelect: true,
+            url: "ggsh",
+            loadMsg: "数据正在加载.....",
+            pagination: true,
+            rownumbers: true,
+            pageList: [5, 10, 15, 20, 50],
+            pageSize: 10,
+            columns: [
+                [
+                    {field: 'gglx', title: '公告类型', width: tablewidth * 0.2, align: 'center'},
+                    {field: 'fbsj', title: '发布时间', width: tablewidth * 0.15, align: 'center'},
+                    {field: 'ah', title: '案号', width: tablewidth * 0.18, align: "center"},
+                    {
+                        field: 'ajmc', title: '案件名称', width: tablewidth * 0.18, align: "center",
+                        formatter: function (value, record, index) {
+                            if (value.length > 10) {
+                                str = value.substr(0, 10) + '...';
+                                return "<span data-toggle='tooltip'" +
+                                    " data-placement='bottom' " +
+                                    "title='\"" + value + "\"'>" + str + "</span>"
+                            } else {
+                                return "<span>" + value + "</span>"
+                            }
+                        }
+                    },
+                    {
+                        field: 'fbr', title: '发布人', width: tablewidth * 0.1, align: "center"
+                    },
+                    {
+                        field: 'id', title: '操作', width: tablewidth * 0.14, align: "center",
+                        formatter: function (value) {
+                            return '<image class="icon" data-toggle="tooltip" ' +
+                                'onclick="gg_sh(' + value + ',5)"' +
+                                ' title="通过" src="../../static/image/success.png"/>' +
+                                '<image class="icon" data-toggle="tooltip" onclick="gg_sh(' + value + ',7)"' +
+                                ' title="不通过" src="../../static/image/fail.png"/>' +
+                                '<image class="icon" data-toggle="tooltip" onclick="ggxq(' + value + ')"' +
+                                ' title="查看" src="../../static/image/look.png"/>'
+                        }
+                    }
+                ]
+            ]
+        });
+    }
+
+    function readYyxq(record) {
+        $('#yyxqDialog').find("input[name='bh']").val(record.bh);
+        $('#yyxqDialog').find("input[name='lfsj']").val(record.lfsjStr);
+        $('#yyxqDialog').find("input[name='jfdd']").val(record.jfdd);
+        $('#yyxqDialog').find("input[name='lfr']").val(record.lfrxm);
+        $('#yyxqDialog').find("input[name='ah']").val(record.ah);
+        $('#yyxqDialog').find("input[name='ajmc']").val(record.ajmc);
+        $('#yyxqDialog').find("input[name='jfr']").val(record.jfr);
+        $('#yyxqDialog').dialog('open');
+    }
+
+    function yytg() {
+        var bh = $('#yyxqDialog').find("input[name='bh']").val();
+        $('#yyxqDialog').dialog('close');
+        yy_sh(bh, 6);
+    }
+
+    function yybtg() {
+        var bh = $('#yyxqDialog').find("input[name='bh']").val();
+        $('#yyxqDialog').dialog('close');
+        yy_sh(bh, 7);
+    }
+
+    function ggxq(bh) {
+        addElement($('#curNav'), '/sh_gg?bh=' + bh, '', '公告审核');
+    }
+</script>

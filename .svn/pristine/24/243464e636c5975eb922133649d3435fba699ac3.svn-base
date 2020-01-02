@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="multipart/form-data" charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../static/Font-Awesome-3.2.1/css/font-awesome.css">
+    <link rel="stylesheet" href="../static/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../static/css/base.css"/>
+    <link rel="stylesheet" type="text/css" href="../static/easyUI/themes/default/easyui.css">
+
+    <script src="../static/js/jquery-1.9.1.min.js"/>
+    <script src="../static/js/bootstrap.js"></script>
+
+    <script src="../static/js/echarts.js"></script>
+    <script src="../static/js/jquery.form.js"></script>
+    <script src="../static/js/htmlTocanvas.js"></script>
+    <script src="../static/js/wangEditor.min.js"></script>
+
+    <script type="text/javascript" src="../static/js/my/common.js"/>
+    <script type="text/javascript" src="../static/easyUI/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../static/easyUI/jquery.easyui.min.js"></script>
+    <script typeof="text/javascript" src="../static/easyUI/locale/easyui-lang-zh_CN.js"></script>
+    <!--[if IE 8]>
+    <script src="../static/js/html5shiv.min.js"></script>
+    <script src="../static/js/respond.js"></script>
+    <![endif]-->
+</head>
+<body style="overflow: hidden;">
+<style type="text/css">
+    .nav-tabs{
+        background-color:#232429
+    }
+    .curItem{
+        margin-left: 5px;
+    }
+    .nav-link{
+        background-color: #ccc
+    }
+
+</style>
+<div class="Header">
+    <img style="float:left;margin: 10px;" width="50px" src="../static/image/fy-logo.png">
+    <div class="title">
+        <span>天津市人民法院预约与公告系统</span>
+    </div>
+    <div style="color: #fff;float: right;margin-top: 25px">
+        <div style="float:left;"><span>站内搜索</span><span class="split">|</span><span>帮助中心</span></div>
+        <div style="float:left;color: #fff;margin-left: 100px;margin-right: 20px;cursor: pointer" id="logout">退出系统</div>
+    </div>
+</div>
+<div class="test">
+    <div class="leftnav">
+        <div style="display: inline-block;">
+            <div class="icon_yh" style="background-color: #ccc">
+            </div>
+            <div th:text="${yh.yhmc}" class="username"></div>
+        </div>
+
+        <ul id="navlist">
+            <li th:each="nav:${navlist}">
+                <span th:each="item:${nav.value}" >
+                    <a th:if="${item.href}==null" th:utext="${item.iconNav}" th:data-id="${item.id}"
+                       onclick="findchildNav(this)" style="color: white;background-color: transparent">
+                    </a>
+                    <a th:if="${item.href}!=null and ${item.fdh}==0" th:data-url="${item.href}" th:data-id="${item.id}"
+                       th:utext="${item.iconNav}" style="color: white;"
+                       th:onclick="|NavToChild('${item.href}','${item.iconUrl}','${item.name}')|">
+                    </a>
+                    <a class="childNav" th:if="${item.href}!=null and ${item.fdh}!=0" th:data-url="${item.href}" th:data-id="${item.fdh}"
+                       th:utext="${item.iconNav}"
+                       style="color: white;display: none;"
+                       th:onclick="|NavToChild('${item.href}','${item.iconUrl}','${item.name}')|">
+                    </a>
+                </span>
+            </li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <ul class="nav  nav-tabs" id="curNav">
+        </ul>
+        <div id="page-content" style="overflow-y: auto;"></div>
+    </div>
+</div>
+<!--蒙版-->
+<div id="mask" class="mask"></div>
+<img id="loading" src="../static/image/loading.gif" class="loading"/>
+</body>
+</html>
+
+<script type="text/javascript">
+    jQuery.browser = {};
+    (function () {
+        jQuery.browser.msie = false;
+        jQuery.browser.version = 0;
+        if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+            jQuery.browser.msie = true;
+            jQuery.browser.version = RegExp.$1;
+        }
+    })();
+    refresh();
+    //系统退出
+    $("#logout").click(function () {
+        window.location.href="/logout";
+    });
+
+    $(function(){
+        var len = $('.leftnav').find('li').length;
+        if(len!=0){
+            addElement($('#curNav'),'home','icon-home','');
+        }
+    });
+    function NavToChild(href,iconUrl,name){
+        $('#navlist').find('a').each(function (k,v) {
+            $(v).css('background-color','transparent');
+            if ($(v).data('url')==href){
+                $(v).css('background-color','#00aeff');
+            }
+        });
+        addElement($('#curNav'),href,iconUrl,name)
+    }
+
+    function findchildNav(obj) {
+        var id = $(obj).data('id');
+        $('#navlist').find('a').each(function (k,v) {
+            $(v).css('background-color','transparent');
+        })
+        $(obj).css('background-color','#00aeff');
+        $('#navlist').find('.childNav').each(function (k,v) {
+            var fdh  = $(v).data('id');
+            if (fdh == id){
+                var style = $(v).css('display');
+                if(style == 'none'){
+                    $(v).css('display','block');
+                }else {
+                    $(v).css('display','none')
+                }
+            }
+        })
+    }
+</script>
