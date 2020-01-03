@@ -1,3 +1,14 @@
 <div xmlns:th="http://www.w3.org/1999/xhtml">
-    
+    <div th:if="${res.length>1}" class="test">
+        <img th:src="${res}">
+    </div>
 </div>
+
+<script>
+    $(function () {
+        var obj = findPage().find('.test');
+        if (obj.length == 0) {
+            alert('获取大屏截图失败')
+        }
+    })
+</script>

@@ -859,8 +859,8 @@ public class ScreenUtil {
          textModel.setFontsize(36);
          textModel.setAlign_x("LEFT");
          textModel.setType("SCROLL");
-         Widget widget = new Widget();
-         widget.setType("ARCH_TEXT");
+         int widget_id = addWidget(pageId, ProgramManager.WidgetMediaType.ARCH_TEXT,new NormalTextBean(""));
+         Widget widget = NovaOpt.GetInstance().getWidgetParam(pageId,widget_id);
          widget = setTextStyle(textModel,widget);
          List<Widget> widgets = new ArrayList<>();
          widgets.add(widget);
@@ -869,13 +869,13 @@ public class ScreenUtil {
              MediaContent mediaContent = new MediaContent(0,0,searchResult.width,searchResult.height,wjb.getBcwz());
              if (wjb.getType().equals("image")){
                  // 文件
-                 widget = new Widget();
-                 widget.setType("PICTURE");
+                 widget_id = addWidget(pageId, ProgramManager.WidgetMediaType.PICTURE,"");
+                 widget = NovaOpt.GetInstance().getWidgetParam(pageId,widget_id);
                  widget = saveMediaParams(widget,mediaContent);
                  widgets.add(widget);
              }else {
-                 widget = new Widget();
-                 widget.setType("VIDEO");
+                 widget_id = addWidget(pageId, ProgramManager.WidgetMediaType.VIDEO,"");
+                 widget = NovaOpt.GetInstance().getWidgetParam(pageId,widget_id);
                  widget = saveMediaParams(widget,mediaContent);
                  widgets.add(widget);
              }
