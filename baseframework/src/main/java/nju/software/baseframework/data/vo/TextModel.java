@@ -21,7 +21,7 @@ public class TextModel {
     private String height;
     private String type = "PAGE_SWITCH";
     private float speed = 2.0f;
-    private int duration = 10000;
+    private int duration = 1000; // 每一行1s
 
     public TextModel(String content, String offset_x, String offset_y, String width, String height) {
         this.content = content;

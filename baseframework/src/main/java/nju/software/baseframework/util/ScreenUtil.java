@@ -413,11 +413,12 @@ public class ScreenUtil {
         //endregion
         line.setSegs(segs);
         lines.add(line);
+        int count = content.split("\n").length;
         metaDataArchText.getContent().getParagraphs().get(0).setLines(lines);
         metaDataArchText.getContent().getParagraphs().get(0).setHorizontalAlignment(textStyle.getAlign_x());
         metaDataArchText.getContent().getParagraphs().get(0).setVerticalAlignment(textStyle.getAlign_y());
         widget.setMetadata(metaDataArchText);
-        widget.setDuration(segs.size()*textStyle.getDuration());  // 以ms为单位
+        widget.setDuration(count*textStyle.getDuration());  // 以ms为单位
         return widget;
     }
 
@@ -506,10 +507,10 @@ public class ScreenUtil {
         widget.setDataSource(md5 + suffix);
 
         // 设置位置信息
-        Layout layout = new Layout(mediaContent.getX()/searchResult.width+"%",
-                mediaContent.getY()/searchResult.height+"%",
-                mediaContent.getWidth()/searchResult.width+"%",
-                mediaContent.getHeight()/searchResult.height+"%");
+        Layout layout = new Layout(mediaContent.getX()*100/searchResult.width+"%",
+                mediaContent.getY()*100/searchResult.height+"%",
+                mediaContent.getWidth()*100/searchResult.width+"%",
+                mediaContent.getHeight()*100/searchResult.height+"%");
         widget.setDisplayRatio("CUSTOM");
         widget.setLayout(layout);
         // 设置重复次数
@@ -846,7 +847,7 @@ public class ScreenUtil {
          PageItem pageItem = NovaOpt.GetInstance().getPageItem(pageId);
          WidgetContainer widgetContainer = new WidgetContainer();
          //首先需要创建一个100%的窗口
-         widgetContainer.setLayout(new Layout("0","0","100%","100%"));
+         widgetContainer.setLayout(new Layout("0%","0%","100%","100%"));
          Contents contents = new Contents();
          //这里仅设计了开庭公告与上传文件之间的轮播
          // 设置主体部分
@@ -855,26 +856,28 @@ public class ScreenUtil {
              stringBuffer.append(getDealStr(gg.getAh(),36,searchResult.width) +"      "+gg.getGgnr()+"\n"
                      +getDealStr(DateUtil.format(gg.getFbsj(),DateUtil.chineseDtFormat),36,searchResult.width)+"\n");
          }
-         TextModel textModel = new TextModel(stringBuffer.toString(),"0","0", "100%","100%");
+         TextModel textModel = new TextModel(stringBuffer.toString(),"0%","0%", "100%","100%");
          textModel.setFontsize(36);
          textModel.setAlign_x("LEFT");
          textModel.setType("SCROLL");
          int widget_id = addWidget(pageId, ProgramManager.WidgetMediaType.ARCH_TEXT,new NormalTextBean(""));
          Widget widget = NovaOpt.GetInstance().getWidgetParam(pageId,widget_id);
+         widget.setMetadata(new NormalTextBean(""));
          widget = setTextStyle(textModel,widget);
          List<Widget> widgets = new ArrayList<>();
          widgets.add(widget);
          // 添加所有的文件
          for (Wjb wjb:wjbs){
-             MediaContent mediaContent = new MediaContent(0,0,searchResult.width,searchResult.height,wjb.getBcwz());
+             MediaContent mediaContent = new MediaContent(0,0,searchResult.width,
+                     searchResult.height,"D:\\Upload\\"+wjb.getBcwz());
              if (wjb.getType().equals("image")){
                  // 文件
-                 widget_id = addWidget(pageId, ProgramManager.WidgetMediaType.PICTURE,"");
+                 widget_id = addWidget(pageId, ProgramManager.WidgetMediaType.PICTURE,"D:\\Upload\\"+wjb.getBcwz());
                  widget = NovaOpt.GetInstance().getWidgetParam(pageId,widget_id);
                  widget = saveMediaParams(widget,mediaContent);
                  widgets.add(widget);
              }else {
-                 widget_id = addWidget(pageId, ProgramManager.WidgetMediaType.VIDEO,"");
+                 widget_id = addWidget(pageId, ProgramManager.WidgetMediaType.VIDEO,"D:\\Upload\\"+wjb.getBcwz());
                  widget = NovaOpt.GetInstance().getWidgetParam(pageId,widget_id);
                  widget = saveMediaParams(widget,mediaContent);
                  widgets.add(widget);
@@ -882,15 +885,15 @@ public class ScreenUtil {
          }
          contents.setWidgets(widgets);
          widgetContainer.setContents(contents);
+         widgetContainer.setEnable(true);
          List<WidgetContainer> widgetContainers = new ArrayList<>();
          widgetContainers.add(widgetContainer);
          pageItem.setWidgetContainers(widgetContainers);
      }
 
      public static void main(String[] args){
-         ScreenUtil screenUtil = new ScreenUtil();
-         screenUtil.init();
-         boolean res = screenUtil.connectWithLed("130.13.11.104");
+         String	content = "(2019)津0110民初5268号\n      本院定于2020年01月13日09时00分在第十四法庭公开审理天津市东丽区民用公房管理所与张淼宗房屋租赁合同纠纷一案。\n            2019年12月16日\n\n(2019)津0110民初9935号\n      本院定于2020年01月08日09时00分在第九法庭公开审理周春华与上海尼雅孜信息技术有限公司买卖合同纠纷一案。\n            2019年12月20日\n\n(2019)津0110民初9918号\n      本院定于2020年01月06日09时00分在第一中法庭公开审理天津跨越物流有限公司与殷明刚经济补偿金纠纷一案。\n            2019年12月27日\n\n(2019)津0110民初6766号\n      本院定于2020年01月10日09时00分在第九法庭公开审理王金珍、王金梅与王仁增、王思明、韩金昌、韩勇继承纠纷一案。\n            2020年01月03日\n\n(2019)津0110民初8644号\n      本院定于2020年01月06日14时00分在第十五法庭公开审理李雪与金融街东丽湖（天津）置业有限公司、北京金融街物业管理有限责任公司天津分公司、何大双财产损害赔偿纠纷一案。\n            2020年01月03日\n\n(2019)津0110民初8985号\n      本院定于2020年01月08日09时00分在第十四法庭公开审理黄俊峰与天津房摆渡网络科技有限公司返还原物纠纷一案。\n            2020年01月03日\n\n(2019)津0110民初9653号\n      本院定于2020年01月09日14时00分在第十三法庭公开审理张长玲与孙福晶,刘廷玺,张文兰申请执行人执行异议之诉一案。\n            2020年01月03日\n\n(2019)津0110民初9862号\n      本院定于2020年01月06日09时00分在第十五法庭公开审理天津市詹鑫工贸有限公司与孙敬如排除妨害纠纷一案。\n            2020年01月03日\n\n(2019)津0110民初9886号\n      本院定于2020年01月14日10时00分在第二十一法庭公开审理天津市金隅混凝土有限公司与天津市龙盛祥地基基础工程有限公司买卖合同纠纷一案。\n            2020年01月03日\n\n(2019)津0110民初9899号\n      本院定于2020年01月09日09时00分在第十三法庭公开审理吴国喜、施淑敏与吴同健案外人执行异议之诉一案。\n            2020年01月03日\n\n(2019)津0110民初9922号\n      本院定于2020年01月30日14时00分在第二十一法庭公开审理天津保益丰达建材销售有限公司与河南圣锦建设工程有限公司买卖合同纠纷一案。\n            2020年01月03日\n\n(2019)津0110民初9925号\n      本院定于2020年01月14日14时00分在第二十一法庭公开审理天津市西青区华泰兴旺石材经营部与河南圣锦建设工程有限公司买卖合同纠纷一案。\n            2020年01月03日\n\n(2019)津0110民初9942号\n      本院定于2020年01月15日14时00分在第二十一法庭公开审理天津方方正正钢管有限公司与天津市华春管道工程技术有限公司买卖合同纠纷一案。\n            2020年01月03日\n\n(2019)津0110民初9945号\n      本院定于2020年01月14日09时00分在第二十一法庭公开审理天津金隅混凝土有限公司与天津第三市政公路工程有限公司买卖合同纠纷一案。\n            2020年01月03日\n\n(2019)津0110民初9946号\n      本院定于2020年01月15日09时00分在第二十一法庭公开审理川铁电气（天津）股份有限公司与青岛天安鲁兴电力工程有限公司、青岛新光耀电气集团有限公司买卖合同纠纷一案。\n            2020年01月03日\n\n     (2020)津0110民初4号\n      本院定于2020年01月17日09时03分在第十法庭公开审理张长召、靳焕文与杨玉纯、利宝保险有限公司天津分公司机动车交通事故责任纠纷一案。\n            2020年01月03日\n\n   (2020)津0110民初59号\n      本院定于2020年01月09日10时09分在第十法庭公开审理田林与刘杰、天津市公交集团第四客运有限公司、中国人民财产保险股份有限公司天津市分公司机动车交通事故责任纠纷一案。\n            2020年01月03日\n\n   (2020)津0110民初61号\n      本院定于2020年01月17日09时34分在第十法庭公开审理徐凯、万金和与曹秀梅、胡波、中国平安财产保险股份有限公司天津分公司机动车交通事故责任纠纷一案。\n            2020年01月03日\n\n   (2020)津0110民初81号\n      本院定于2020年01月07日09时12分在第十法庭公开审理刘东权与王振军、张子丽、中国人民财产保险股份有限公司天津市河西支公司机动车交通事故责任纠纷一案。\n            2020年01月03日\n\n";
+         System.out.println(content.split("\n").length);
 //         screenUtil.logout();
      }
 }
