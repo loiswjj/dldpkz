@@ -392,47 +392,46 @@ public class AdminController {
         if (controller.connectWithLed(screen.getIp())){
             //连接大屏控制器成功
             controller.initScreen("admin_send");
-            int pageId = controller.addPage();
-            if (arr.length == 1) {
-                for (int item : arr){
-                    if (item == 8) {
-                        // 失信被执行人
-                        DynamicDataSource.router(fydm);
-                        FYEnum fyEnum = FYEnum.getFyByFydm(fydm);
-                        List<XycjSxbzxr> zrlList = screenService.getSxbzxr(fyEnum.getName(),"自然人");
-                        for (XycjSxbzxr sxbzxr: zrlList){
-                            if(sxbzxr.getZjhm()!=null&&sxbzxr.getZjhm()!=""
-                                    &&sxbzxr.getZjhm().length()>=18){
-                                String sfzh = sxbzxr.getZjhm().substring(0,10)+"****"
-                                        +sxbzxr.getZjhm().substring(14,18);
-                                sxbzxr.setZjhm(sfzh);
-                            }
+            int pageId ;
+            for (int item : arr){
+                if (item == 8) {
+                    // 失信被执行人
+                    DynamicDataSource.router(fydm);
+                    FYEnum fyEnum = FYEnum.getFyByFydm(fydm);
+                    List<XycjSxbzxr> zrlList = screenService.getSxbzxr(fyEnum.getName(),"自然人");
+                    for (XycjSxbzxr sxbzxr: zrlList){
+                        if(sxbzxr.getZjhm()!=null&&sxbzxr.getZjhm()!=""
+                                &&sxbzxr.getZjhm().length()>=18){
+                            String sfzh = sxbzxr.getZjhm().substring(0,10)+"****"
+                                    +sxbzxr.getZjhm().substring(14,18);
+                            sxbzxr.setZjhm(sfzh);
                         }
-                        //如果是法人
-                        List<XycjSxbzxr> zzjgList = screenService.getSxbzxr(fyEnum.getName(),"法人");
-                        for (XycjSxbzxr sxbzxr: zzjgList){
-                            if(sxbzxr.getZzjgdm()!=null&&sxbzxr.getZzjgdm()!=""
-                                    &&sxbzxr.getZzjgdm().length()>=18){
-                                String zzjgdm = sxbzxr.getZzjgdm().substring(0,10)+"****"
-                                        +sxbzxr.getZzjgdm().substring(14,18);
-                                sxbzxr.setZzjgdm(zzjgdm);
-                            }
+                    }
+                    //如果是法人
+                    List<XycjSxbzxr> zzjgList = screenService.getSxbzxr(fyEnum.getName(),"法人");
+                    for (XycjSxbzxr sxbzxr: zzjgList){
+                        if(sxbzxr.getZzjgdm()!=null&&sxbzxr.getZzjgdm()!=""
+                                &&sxbzxr.getZzjgdm().length()>=18){
+                            String zzjgdm = sxbzxr.getZzjgdm().substring(0,10)+"****"
+                                    +sxbzxr.getZzjgdm().substring(14,18);
+                            sxbzxr.setZzjgdm(zzjgdm);
                         }
-                        controller.createSxbzxrProgram(zrlList,zzjgList,pageId);
                     }
-                    else if (item == 10){
-                        //暂时没想好应该怎么弄
-                    }else {
-                        // 公告类
-                        controller.createKTGGProgram(ggMap.get(item),pageId);
-                    }
+                    pageId = controller.addPage();
+                    controller.createSxbzxrProgram(zrlList,zzjgList,pageId);
                 }
-            } else {
-                //获取到此屏下的所有文件
-                List<Wjb> wjList = wjbDao.findBcwzList(lx);
-                controller.Carousel(arr,ggMap,wjList,pageId);
+                else if (item == 10){
+                    //暂时没想好应该怎么弄
+                    List<Wjb> wjbs = wjbDao.findBcwzList(lx);
+                    controller.UploadFiles(wjbs);
+                }else {
+                    // 公告类
+                    pageId = controller.addPage();
+                    controller.createKTGGProgram(ggMap.get(item),pageId);
+                }
             }
-            if (controller.sendProgram("admin_send")){
+            long timeMillis = System.currentTimeMillis();
+            if (controller.sendProgram("admin_send"+timeMillis)){
                 return "true";
             }else return "发布信息失败！";
         }else return "连接大屏失败！";

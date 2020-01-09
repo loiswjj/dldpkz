@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e8633369-dab5-4a2e-97a8-7ba488fcb52b" name="Default Changelist" comment="">
+    <list default="true" id="e8633369-dab5-4a2e-97a8-7ba488fcb52b" name="Default Changelist" comment="widgetContainer enable 设置为true时轮播才有效！">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nju/software/baseframework/data/vo/TextModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/nju/software/baseframework/data/vo/TextModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/nju/software/baseframework/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/nju/software/baseframework/controller/AdminController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/nju/software/baseframework/util/ScreenUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/nju/software/baseframework/util/ScreenUtil.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
@@ -20,45 +20,46 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/controller/AdminController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2085">
-              <caret line="450" column="30" selection-start-line="450" selection-start-column="30" selection-end-line="450" selection-end-column="30" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/templates/admin/dpjk.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="7" column="19" lean-forward="true" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/Application.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="100">
-              <caret line="8" column="14" lean-forward="true" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+              <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/util/ScreenUtil.java">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/config/jdbc.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="851" column="31" lean-forward="true" selection-start-line="851" selection-start-column="31" selection-end-line="851" selection-end-column="31" />
-              <folding>
-                <element signature="method#connect#0;class#ScreenUtil#0" />
-                <element signature="method#login#0;class#ScreenUtil#0" />
-                <element signature="method#getScreenParam#0;class#ScreenUtil#0" />
-                <element signature="method#getAvailableMemoryData#0;class#ScreenUtil#0" />
-                <element signature="method#getAvailableStorageData#0;class#ScreenUtil#0" />
-                <element signature="method#getScreenshot#0;class#ScreenUtil#0" />
-              </folding>
+            <state relative-caret-position="275">
+              <caret line="11" column="5" selection-start-line="11" selection-start-column="5" selection-end-line="11" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/data/dao/AJlbDaoImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1025">
+              <caret line="57" column="34" selection-start-line="57" selection-start-column="34" selection-end-line="57" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/util/ExcelUtil.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="425">
+              <caret line="17" column="38" selection-start-line="17" selection-start-column="38" selection-end-line="17" selection-end-column="38" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/data/dao/AJlbDao.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="100">
+              <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -72,11 +73,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/data/vo/TextModel.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/controller/AdminController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="21" column="40" lean-forward="true" selection-start-line="21" selection-start-column="40" selection-end-line="21" selection-end-column="40" />
+            <state relative-caret-position="457">
+              <caret line="395" column="33" lean-forward="true" selection-start-line="395" selection-start-column="33" selection-end-line="395" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -84,7 +85,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/controller/FileController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
+            <state relative-caret-position="-450">
               <caret line="38" selection-start-line="38" selection-end-line="38" />
             </state>
           </provider>
@@ -97,6 +98,8 @@
       <find>edit_screen</find>
       <find>addW</find>
       <find>dpjk</find>
+      <find>10</find>
+      <find>dptb</find>
     </findStrings>
   </component>
   <component name="Git.Rebase.Settings">
@@ -116,10 +119,10 @@
         <option value="$PROJECT_DIR$/src/main/java/nju/software/baseframework/Timer/AppInitializer.java" />
         <option value="$PROJECT_DIR$/src/main/java/nju/software/baseframework/Timer/GgGetAndScreenPutTimer.java" />
         <option value="$PROJECT_DIR$/src/main/resources/templates/admin/dptb.html" />
-        <option value="$PROJECT_DIR$/src/main/java/nju/software/baseframework/controller/AdminController.java" />
         <option value="$PROJECT_DIR$/src/main/resources/templates/admin/dpjk.html" />
         <option value="$PROJECT_DIR$/src/main/java/nju/software/baseframework/data/vo/TextModel.java" />
         <option value="$PROJECT_DIR$/src/main/java/nju/software/baseframework/util/ScreenUtil.java" />
+        <option value="$PROJECT_DIR$/src/main/java/nju/software/baseframework/controller/AdminController.java" />
       </list>
     </option>
   </component>
@@ -228,6 +231,14 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="config" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dlDpkz" type="b2602c69:ProjectViewProjectNode" />
+              <item name="baseframework" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -243,8 +254,8 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -312,7 +323,12 @@
       <workItem from="1577778670320" duration="14000" />
       <workItem from="1577779385897" duration="3344000" />
       <workItem from="1577934970058" duration="3868000" />
-      <workItem from="1577954894598" duration="11635000" />
+      <workItem from="1577954894598" duration="13622000" />
+      <workItem from="1578274320236" duration="6000" />
+      <workItem from="1578274441321" duration="7000" />
+      <workItem from="1578274493211" duration="3938000" />
+      <workItem from="1578392734036" duration="1313000" />
+      <workItem from="1578575177242" duration="681000" />
     </task>
     <task id="LOCAL-00001" summary="master batch">
       <created>1577955131755</created>
@@ -328,17 +344,24 @@
       <option name="project" value="LOCAL" />
       <updated>1578040921085</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="widgetContainer enable 设置为true时轮播才有效！">
+      <created>1578045423051</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1578045423051</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19123000" />
+    <option name="totallyTimeSpent" value="27055000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="878" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26340482" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.28150135" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -346,11 +369,10 @@
       <window_info id="UI Designer" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info id="Web" order="7" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" weight="0.3297587" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3994638" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.3994638" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -362,6 +384,7 @@
       <window_info anchor="bottom" id="Java Enterprise" order="12" />
       <window_info anchor="bottom" id="Database Changes" order="13" />
       <window_info anchor="bottom" id="Version Control" order="14" sideWeight="0.49932975" weight="0.3297587" />
+      <window_info anchor="bottom" id="Messages" order="15" weight="0.3297587" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -402,12 +425,27 @@
         </entry>
       </map>
     </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list />
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="master batch" />
     <MESSAGE value="add template for show the status of LED screen" />
     <MESSAGE value="解决widget metaDataArch为空的bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="解决widget metaDataArch为空的bug" />
+    <MESSAGE value="widgetContainer enable 设置为true时轮播才有效！" />
+    <option name="LAST_COMMIT_MESSAGE" value="widgetContainer enable 设置为true时轮播才有效！" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/pom.xml">
@@ -486,13 +524,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/controller/FileController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="38" selection-start-line="38" selection-end-line="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/Timer/GgGetAndScreenPutTimer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="649">
@@ -532,13 +563,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/data/dao/AJjbDao.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_201/src.zip!/java/lang/StringBuffer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
@@ -556,35 +580,77 @@
     <entry file="file://$PROJECT_DIR$/src/main/resources/templates/admin/dpjk.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
-          <caret line="7" column="19" lean-forward="true" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/Application.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/org/hibernate/javax/persistence/hibernate-jpa-2.1-api/1.0.2.Final/hibernate-jpa-2.1-api-1.0.2.Final.jar!/javax/persistence/EntityManager.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="15" column="17" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/config/jdbc.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="11" column="5" selection-start-line="11" selection-start-column="5" selection-end-line="11" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/data/dao/AJlbDaoImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1025">
+          <caret line="57" column="34" selection-start-line="57" selection-start-column="34" selection-end-line="57" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/data/dao/AJlbDao.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="100">
-          <caret line="8" column="14" lean-forward="true" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+          <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/controller/AdminController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/data/dao/AJjbDao.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2085">
-          <caret line="450" column="30" selection-start-line="450" selection-start-column="30" selection-end-line="450" selection-end-column="30" />
+        <state relative-caret-position="225">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/data/vo/TextModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="21" column="40" lean-forward="true" selection-start-line="21" selection-start-column="40" selection-end-line="21" selection-end-column="40" />
+        <state relative-caret-position="525">
+          <caret line="21" column="40" selection-start-line="21" selection-start-column="40" selection-end-line="21" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/controller/ajaxController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-28">
+          <caret line="279" column="59" lean-forward="true" selection-start-line="279" selection-start-column="59" selection-end-line="279" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/util/ExcelUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="17" column="38" selection-start-line="17" selection-start-column="38" selection-end-line="17" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/controller/FileController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-450">
+          <caret line="38" selection-start-line="38" selection-end-line="38" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/util/ScreenUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="851" column="31" lean-forward="true" selection-start-line="851" selection-start-column="31" selection-end-line="851" selection-end-column="31" />
+        <state relative-caret-position="2889">
+          <caret line="815" column="26" selection-start-line="815" selection-start-column="26" selection-end-line="815" selection-end-column="26" />
           <folding>
             <element signature="method#connect#0;class#ScreenUtil#0" />
             <element signature="method#login#0;class#ScreenUtil#0" />
@@ -592,7 +658,25 @@
             <element signature="method#getAvailableMemoryData#0;class#ScreenUtil#0" />
             <element signature="method#getAvailableStorageData#0;class#ScreenUtil#0" />
             <element signature="method#getScreenshot#0;class#ScreenUtil#0" />
+            <element signature="method#setTextStyle#0;class#ScreenUtil#0" />
+            <element signature="method#createSxbzxrProgram#0;class#ScreenUtil#0" />
+            <element signature="e#21369#23793#1" />
+            <element signature="method#sendTimingProgram#0;class#ScreenUtil#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/Application.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/nju/software/baseframework/controller/AdminController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="457">
+          <caret line="395" column="33" lean-forward="true" selection-start-line="395" selection-start-column="33" selection-end-line="395" selection-end-column="33" />
         </state>
       </provider>
     </entry>
