@@ -391,7 +391,8 @@ public class AdminController {
         controller.init();
         if (controller.connectWithLed(screen.getIp())){
             //连接大屏控制器成功
-            controller.initScreen("admin_send");
+            String programName = "admin_send_"+ System.currentTimeMillis();
+            controller.initScreen(programName);
             int pageId ;
             for (int item : arr){
                 if (item == 8) {
@@ -421,7 +422,7 @@ public class AdminController {
                     controller.createSxbzxrProgram(zrlList,zzjgList,pageId);
                 }
                 else if (item == 10){
-                    //暂时没想好应该怎么弄
+                    //上传文件
                     List<Wjb> wjbs = wjbDao.findBcwzList(lx);
                     controller.UploadFiles(wjbs);
                 }else {
@@ -430,8 +431,7 @@ public class AdminController {
                     controller.createKTGGProgram(ggMap.get(item),pageId);
                 }
             }
-            long timeMillis = System.currentTimeMillis();
-            if (controller.sendProgram("admin_send"+timeMillis)){
+            if (controller.sendProgram(programName)){
                 return "true";
             }else return "发布信息失败！";
         }else return "连接大屏失败！";

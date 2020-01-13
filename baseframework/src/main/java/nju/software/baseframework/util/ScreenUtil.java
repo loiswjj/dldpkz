@@ -504,7 +504,7 @@ public class ScreenUtil {
 
     private Widget saveMediaParams(Widget widget, MediaContent mediaContent) {
         File file = new File(mediaContent.getFilepath());
-        // 设置内容
+//         设置内容
         widget.setOriginalDataSource(file.getAbsolutePath());
         widget.setFilesize(file.length());
         widget.setName(mediaContent.getMediaName());
@@ -521,6 +521,14 @@ public class ScreenUtil {
         widget.setLayout(layout);
         // 设置重复次数
         widget.setRepeatCount(1);
+        if (mediaContent.getType().equals("image")) {
+            DisplayStyle dis=new DisplayStyle();
+            DisplayStyle.ScrollAttributes style=new DisplayStyle.ScrollAttributes();
+            style.setEffects(new Effect(5f,"MARQUEE_LEFT"));
+            dis.setScrollAttributes(style);
+            widget.setMetadata(dis);
+            widget.setDuration(mediaContent.getDuration());
+        }
         return widget;
     }
 
@@ -864,6 +872,7 @@ public class ScreenUtil {
             int pageId = addPage();
             MediaContent mediaContent = new MediaContent(0, 0, searchResult.width,
                     searchResult.height, "D:\\Upload\\" + wjb.getBcwz());
+            mediaContent.setType(wjb.getType());
             if (wjb.getType().equals("image")) {
                 // 文件
                 widget_id = addWidget(pageId, ProgramManager.WidgetMediaType.PICTURE, "D:\\Upload\\" + wjb.getBcwz());
